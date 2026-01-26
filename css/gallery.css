@@ -92,15 +92,7 @@ section h2 {
 /* ===========================
    GALLERY GRID
 =========================== */
-.gallery-wrapper {
-  display: grid;
-  grid-template-columns: repeat(3, var(--gallery-img-size));
-  grid-auto-rows: var(--gallery-img-size);
-  gap: var(--gallery-gap);
-  justify-content: center;
-  max-width: var(--section-max-width);
-  margin-bottom: 20px;
-}
+
 
 /* individual figure styling */
 .gallery-wrapper figure {
@@ -117,13 +109,22 @@ section h2 {
   box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
 
+.gallery-wrapper {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: var(--gallery-gap);
+  justify-content: center;
+  width: 100%;        /* full width ng section */
+  max-width: 100%;    /* remove fixed max width */
+  margin-bottom: 20px;
+}
+
 .gallery-wrapper img {
-  width: var(--gallery-img-size);
-  height: var(--gallery-img-size);
-  object-fit: cover; /* ensures horizontal/vertical photos fit inside square */
-  background: var(--clr-placeholder);
+  width: 100%;        /* image fills the grid cell */
+  height: auto;       /* maintain aspect ratio */
+  object-fit: cover;  /* crop if needed */
+  border: 1px solid #ccc;
   display: block;
-  border: 1px solid #ccc; /* subtle border for separation */
 }
 
 .gallery-wrapper figcaption {
@@ -212,3 +213,4 @@ section h2 {
     --gallery-gap: 6px;
   }
 }
+
