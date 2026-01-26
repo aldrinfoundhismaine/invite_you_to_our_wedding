@@ -158,41 +158,44 @@ section h2 {
 .pagination button:hover {
   background: var(--clr-accent-hover);
 }
-
 /* ===========================
    LIGHTBOX
 =========================== */
 .lightbox {
   display: none;
   position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.9);
+  inset: 0;                   /* covers entire viewport */
+  background: rgba(0,0,0,0.95);
   align-items: center;
   justify-content: center;
   z-index: 1000;
   flex-direction: column;
+  padding: 0;                 /* remove padding to occupy full screen */
 }
 
 .lightbox-img {
-  max-width: 90%;
-  max-height: 80vh;
-  margin-bottom: 10px;
+  width: 100%;               /* full width of viewport */
+  height: 100vh;             /* full height of viewport */
+  object-fit: contain;       /* maintain aspect ratio, fit inside screen */
+  margin: 0;
 }
 
 .lightbox-caption {
   color: #fff;
   font-size: 1rem;
   text-align: center;
-  margin-bottom: 10px;
+  margin: 10px 0;
+  padding: 0 10px;           /* small padding for mobile screens */
+  max-width: 95%;            /* don't overflow viewport */
 }
 
 .lightbox .close,
 .lightbox .prev,
 .lightbox .next {
   color: #fff;
-  font-size: 2rem;
+  font-size: 2.5rem;          /* bigger buttons for mobile */
   cursor: pointer;
-  margin: 5px;
+  margin: 10px;
   user-select: none;
   transition: color var(--transition-speed) ease;
 }
@@ -204,13 +207,22 @@ section h2 {
 }
 
 /* ===========================
-   RESPONSIVE
+   RESPONSIVE LIGHTBOX
 =========================== */
-@media (max-width: 480px) {
-  :root {
-    --gallery-img-size: 100px;
-    --section-max-width: 320px;
-    --gallery-gap: 6px;
+@media (max-width: 768px) {
+  .lightbox-img {
+    width: 100%;
+    height: 100vh;
+  }
+
+  .lightbox .close,
+  .lightbox .prev,
+  .lightbox .next {
+    font-size: 2rem;
+  }
+
+  .lightbox-caption {
+    font-size: 0.9rem;
   }
 }
 
