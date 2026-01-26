@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aldrin John & Sharmaine | Wedding Invitation</title>
+
+  <!-- SEO & Social Sharing -->
+  <meta name="description" content="Wedding Invitation of Aldrin John & Sharmaine on June 20, 2027. Celebrate our special day!">
+  <meta property="og:title" content="Aldrin John & Sharmaine | Wedding Invitation">
+  <meta property="og:description" content="Join us in celebrating our special day on June 20, 2027!">
+  <meta property="og:image" content="assets/cover.jpg">
+  <meta property="og:type" content="website">
+
+  <!-- Favicon -->
+  <link rel="icon" href="assets/favicon.png" type="image/png">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lato&display=swap" rel="stylesheet">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- AOS Animation -->
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+
+  <!-- AddEvent Calendar -->
+  <script src="https://addevent.com/libs/atc/1.6.1/atc.min.js" async defer></script>
+</head>
+
+<body>
+
+  <!-- =========================
+       BACKGROUND MUSIC
+  ========================= -->
+  <audio id="bgMusic" loop>
+    <source src="assets/music/music 1.mp3" type="audio/mpeg">
+  </audio>
+
+  <!-- =========================
+       HASHTAG BANNER
+  ========================= -->
+  <div id="hashtag">#AldrinFoundHisMaine</div>
+
+  <!-- =========================
+       NAVIGATION
+  ========================= -->
+  <nav class="nav" aria-label="Main navigation">
+    <div class="nav-brand">A & S</div>
+    <ul>
+      <li><a href="#hero">Home</a></li>
+      <li><a href="#story">Story</a></li>
+      <li><a href="#details">Details</a></li>
+      <li><a href="#rsvp">RSVP</a></li>
+      <li><a href="#gallery" >Gallery</a></li>
+
+        <li class="nav-settings">
+  <button id="settingsToggle" aria-label="Open settings">⚙️</button>
+</li>
+      <li>
+        <a href="#" id="musicToggle" aria-label="Toggle background music">
+          <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <rect id="pause1" x="6" y="4" width="4" height="16"/>
+            <rect id="pause2" x="14" y="4" width="4" height="16"/>
+          </svg>
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- =========================
+     HERO SECTION
+========================= -->
+<section id="hero">
+
+  <!-- Hero Background Video -->
+  <video autoplay muted loop playsinline id="bgVideo" poster="assets/video-fallback.jpg">
+    <source src="assets/video.mp4" type="video/mp4">
+  </video>
+
+  <!-- Countdown Timer -->
+  <div id="countdown">
+    <span id="days">00</span>d
+    <span id="hours">00</span>h
+    <span id="minutes">00</span>m
+    <span id="seconds">00</span>s
+  </div>
+
+  <!-- Hero Content -->
+  <div class="hero-content" data-aos="fade-up">
+    <img src="assets/logo/A&S 3.png" alt="A & S Logo" class="hero-logo" loading="lazy">
+    <p>We invite you to celebrate our wedding</p>
+
+    <!-- Hero Buttons -->
+    <div class="hero-buttons">
+      <button
+        class="btn-save-date"
+        id="saveDateBtn"
+        aria-label="Save Aldrin & Sharmaine Wedding to your calendar">
+        📅 Save the Date
+      </button>
+      <small class="calendar-hint">Adds to your phone calendar</small>
+    </div>
+  </div>
+
+  <!-- Hero Confetti -->
+  <div id="confetti"></div>
+
+</section>
+
+  <!-- =========================
+       STORY SECTION
+  ========================= -->
+  <section id="story" data-aos="fade-up">
+    <h2>Our Story</h2>
+    <p>
+      Our journey together began with love, laughter, and countless shared memories.
+      Through every season and every challenge — we chose each other.
+    </p>
+    <img src="https://via.placeholder.com/600x400/9b779d/ffffff?text=Our+Story" alt="Our Story" loading="lazy">
+  </section>
+
+  <!-- =========================
+       DETAILS SECTION
+  ========================= -->
+  <section id="details" data-aos="fade-up">
+    <h2>Wedding Details</h2>
+    <p><strong>Date:</strong> June 20, 2027</p>
+    <p><strong>Time:</strong> 2:00 PM</p>
+    <p>
+      <strong>Venue:</strong><br>
+      Mary, Mother of Good Counsel Parish Church<br>
+      Marcelo Green Village, Parañaque City
+    </p>
+    <div class="map-container">
+      <iframe
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3859.430148297455!2d121.03744291528824!3d14.477099086058796!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3397cfa9f6d78d7d%3A0x4f91183a6be3af0c!2sMary%2C%20Mother%20of%20Good%20Counsel%20Parish%20Church!5e0!3m2!1sen!2sph!4v1705720000000"
+        width="100%"
+        height="300"
+        style="border:0; border-radius:14px;"
+        allowfullscreen
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade">
+      </iframe>
+    </div>
+  </section>
+
+  <!-- =========================
+       RSVP SECTION
+  ========================= -->
+  <section id="rsvp" data-aos="fade-up">
+    <h2>RSVP</h2>
+    <p>Please let us know if you can join our special day 💜</p>
+    <form class="rsvp-form" method="POST">
+  <input type="text" name="name" placeholder="Your Full Name" required>
+     <select name="attendance" id="attendance" required>
+      <option value="" hidden selected>Will you be attending?</option>
+      <option value="accepts">Accepts with pleasure 💜</option>
+      <option value="not_sure">Not sure yet 🤍</option>
+      <option value="declines">Regretfully declines 😔</option>
+    </select>
+  <textarea name="message" rows="4" placeholder="Leave a message..."></textarea>
+  <button type="submit">Send RSVP</button>
+</form>
+
+  </section>
+
+  <!-- =========================
+       GALLERY SECTION
+  ========================= -->
+  <section id="gallery" data-aos="fade-up">
+    <h2>Memories</h2>
+    <div class="gallery-grid">
+      <figure data-aos="zoom-in"><img src="https://via.placeholder.com/400x400/c9907c/ffffff?text=Memory+1" alt="Memory 1"><figcaption>Memory 1</figcaption></figure>
+      <figure data-aos="zoom-in" data-aos-delay="100"><img src="https://via.placeholder.com/400x400/c9907c/ffffff?text=Memory+2" alt="Memory 2"><figcaption>Memory 2</figcaption></figure>
+      <figure data-aos="zoom-in" data-aos-delay="200"><img src="https://via.placeholder.com/400x400/c9907c/ffffff?text=Memory+3" alt="Memory 3"><figcaption>Memory 3</figcaption></figure>
+      <figure data-aos="zoom-in" data-aos-delay="300"><img src="https://via.placeholder.com/400x400/c9907c/ffffff?text=Memory+4" alt="Memory 4"><figcaption>Memory 4</figcaption></figure>
+    </div>
+<a href="gallery.html" class="btn-save-date">View Full Gallery</a>
+  </section>
+
+  <!-- =========================
+       THANK YOU SECTION
+  ========================= -->
+  <section id="thankyou" data-aos="fade-up">
+    <h2>Thank You</h2>
+    <p>
+      From the bottom of our hearts, thank you for being part of our journey.
+      Whether near or far, your love and prayers mean the world to us.
+    </p>
+    <figure>
+      <img src="https://via.placeholder.com/600x400/9b59b6/ffffff?text=Thank+You" alt="Thank You Image" loading="lazy">
+      <figcaption>Thank You</figcaption>
+    </figure>
+  </section>
+
+  <!-- =========================
+       FOOTER
+  ========================= -->
+  <footer>
+    <p>&copy; 2027 Aldrin John & Sharmaine</p>
+  </footer>
+
+  <!-- =========================
+       SCROLL TO TOP BUTTON
+  ========================= -->
+  <div id="scrollTopBtn" aria-label="Scroll to top">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+      <polyline points="6 15 12 9 18 15" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+
+  <!-- =========================
+       SCRIPTS
+  ========================= -->
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script src="js/main.js" defer></script>
+<script>
+document.getElementById("saveDateBtn").addEventListener("click", () => {
+  const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+  if (isIOS) {
+    window.location.href = "wedding.ics";
+  } else {
+    window.open(
+      "https://www.google.com/calendar/render?action=TEMPLATE" +
+      "&text=Aldrin+%26+Sharmaine+Wedding" +
+      "&dates=20270620T080000Z/20270620T120000Z" +
+      "&details=Join+us+on+our+special+day" +
+      "&location=Manila+Philippines",
+      "_blank"
+    );
+  }
+});
+</script>
+
+<div id="settingsPanel">
+  <!-- Background Section -->
+  <h4>Background</h4>
+  <div class="bg-options">
+    <button data-bg="bg1.jpeg">1</button>
+    <button data-bg="bg2.png">2</button>
+    <button data-bg="bg3.jpg">3</button>
+    <button data-bg="bg4.jpg">4</button>
+    <button data-bg="bg5.jpg">5</button>
+    <button data-bg="bg6.jpg">6</button>
+    <button data-bg="bg7.jpg">7</button>
+    <button data-bg="bg8.jpg">8</button>
+  </div>
+
+  <!-- Music Section -->
+  <h4>Background Music</h4>
+  <select id="musicSelector">
+    <option value="">-- Choose Music --</option>
+    <option value="assets/music/music 1.mp3">Track 1</option>
+    <option value="assets/music/music 2.mp3">Track 2</option>
+    <option value="assets/music/music 3.mp3">Track 3</option>
+  </select>
+  <button id="musicToggleBtn">Play / Pause</button>
+</div>
+
+<!-- Audio Element -->
+<audio id="bgMusic" loop></audio>
+
+</body>
+</html>
+
+
+

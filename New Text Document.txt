@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gallery | Nira & Wedding</title>
+
+  <!-- Main Styles -->
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- AOS (same animation system you already use) -->
+  <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- Navigation -->
+  <header class="site-header">
+    <nav class="nav">
+      <a href="index.html" class="nav-logo">Nira & Wedding</a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="gallery.html" class="active">Gallery</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Page Title -->
+  <section class="section section-title" data-aos="fade-up">
+    <h1>Our Gallery</h1>
+    <p class="section-subtitle">Moments we want to remember forever</p>
+  </section>
+
+  <!-- Prenup Section -->
+  <section class="section" data-aos="fade-up">
+    <h2 class="section-heading">Prenup Photos</h2>
+    <div class="gallery-grid">
+      <!-- Images will go here -->
+      <!-- <img src="images/prenup/sample1.jpg" alt="Prenup Photo"> -->
+    </div>
+  </section>
+
+  <!-- Ceremony Section -->
+  <section class="section" data-aos="fade-up">
+    <h2 class="section-heading">Wedding Ceremony</h2>
+    <div class="gallery-grid">
+      <!-- Images will go here -->
+    </div>
+  </section>
+
+  <!-- Reception Section -->
+  <section class="section" data-aos="fade-up">
+    <h2 class="section-heading">Reception</h2>
+    <div class="gallery-grid">
+      <!-- Images will go here -->
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <p>© 2026 Nira & Wedding. All rights reserved.</p>
+  </footer>
+
+  <!-- AOS Script -->
+  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+  <script>
+    AOS.init({ once: true, duration: 800 });
+  </script>
+
+</body>
+</html>

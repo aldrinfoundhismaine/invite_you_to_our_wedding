@@ -1,0 +1,538 @@
+/* ===========================
+   VARIABLES / THEME
+=========================== */
+:root {
+  /* Core Surfaces */
+  --clr-surface-main:    #f9f4f7; 
+  --clr-surface-alt:     #ccb4ce; 
+  --clr-surface-dark:    #9b779d; 
+  --clr-surface-deep:    #1d274b; 
+
+  /* Text Colors */
+  --clr-text-primary:    #1d1d1d;
+  --clr-text-inverse:    #ffffff;
+  --clr-text-muted:      #ccb4ce;
+
+  /* Brand / Accent Colors */
+  --clr-accent-primary:  #1d274b;
+  --clr-accent-soft:     #f3e4e1;
+  --clr-accent-strong:   #c9907c;
+
+  /* UI Colors */
+  --clr-border-soft:     #ccb4ce;
+  --clr-shadow:          rgba(0,0,0,0.25);
+
+  /* Typography */
+  --font-size-hero:      2.5rem;
+  --font-size-countdown: 2.2rem;
+  --font-size-section:   2rem;
+  --font-size-text:      1rem;
+
+
+    --body-bg: url("./assets/background/bg7.jpg"); /* default background, spaces encoded */
+}
+
+/* ===========================
+   GLOBAL STYLES
+=========================== */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Lato', sans-serif;
+
+  background-image: var(--body-bg);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+
+  /* ADD smooth transition */
+  transition: background-image 0.6s ease-in-out;
+
+  color: var(--clr-text-primary);
+  scroll-behavior: smooth;
+}
+
+
+a {
+  color: var(--clr-accent-primary);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: var(--clr-accent-strong);
+}
+
+/* ===========================
+   HASHTAG BANNER
+=========================== */
+#hashtag {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background: rgba(155,119,157,0.95);
+  color: var(--clr-text-inverse);
+  text-align: center;
+  font-weight: bold;
+  font-size: 1rem;
+  padding: 6px 0;
+  z-index: 1001;
+  letter-spacing: 1px;
+  box-shadow: 0 2px 10px var(--clr-shadow);
+}
+
+/* ===========================
+   NAVIGATION
+=========================== */
+.nav {
+  position: relative;
+  top: 25px;
+  width: 100%;
+  background: rgba(29, 39, 75, 0.85);
+  backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 20px;
+  border-radius: 12px;
+  z-index: 999;
+}
+
+.nav-brand {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--clr-surface-main);
+}
+
+.nav ul {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.nav ul li a,
+.nav ul li #musicToggle {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--clr-accent-soft);
+  border: none;
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  transition: color 0.3s ease;
+}
+
+.nav ul li a::after,
+.nav ul li #musicToggle::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  width: 0;
+  height: 2px;
+  background: var(--clr-accent-soft);
+  transition: width 0.3s ease;
+}
+
+.nav ul li a:hover::after,
+.nav ul li #musicToggle:hover::after {
+  width: 100%;
+}
+
+.nav ul li a:hover,
+.nav ul li #musicToggle:hover {
+  color: var(--clr-accent-strong);
+}
+
+#musicToggle .icon {
+  width: 16px;
+  height: 16px;
+  pointer-events: none;
+}
+
+/* ===========================
+   HERO SECTION
+=========================== */
+#hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+#hero video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(0.6);
+  z-index: 0;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  max-width: 90%;
+}
+
+.hero-logo {
+  max-width: 400px;
+  width: 100%;
+  height: auto;
+  margin-bottom: 10px;
+}
+
+.hero-content p {
+  color: var(--clr-surface-dark);
+  font-size: var(--font-size-hero);
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+/* ===========================
+   COUNTDOWN TIMER
+=========================== */
+#countdown {
+  margin: 20px auto;
+  padding: 12px 24px;
+  background: var(--clr-accent-soft);
+  color: var(--clr-accent-primary);
+  border-radius: 16px;
+  font-size: var(--font-size-countdown);
+  font-weight: bold;
+  letter-spacing: 2px;
+  box-shadow: 0 6px 20px var(--clr-shadow);
+}
+/* ===========================
+   HERO BUTTONS
+=========================== */
+.hero-buttons {
+  display: flex;
+  flex-wrap: wrap;       /* allows buttons to stack on smaller screens */
+  gap: 20px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+/* Generic Hero Buttons */
+.hero-buttons button {
+  padding: 16px 36px;
+  border-radius: 50px;
+  font-weight: bold;
+  cursor: pointer;
+  text-align: center;
+  border: none;
+  background: linear-gradient(135deg, var(--clr-accent-soft), var(--clr-accent-primary));
+  color: var(--clr-text-inverse);
+  transition: all 0.3s ease;
+}
+
+.hero-buttons button:hover {
+  background: var(--clr-accent-primary);
+  color: var(--clr-accent-strong);
+  transform: scale(1.05);
+}
+
+/* Save the Date Button */
+.btn-save-date {
+  display: inline-flex;        /* allows emoji or icon alignment */
+  align-items: center;
+  gap: 8px;
+  padding: 16px 36px;
+  border-radius: 50px;
+  font-weight: bold;
+  cursor: pointer;
+  text-align: center;
+  background: linear-gradient(135deg, var(--clr-surface-alt), var(--clr-accent-primary));
+  color: var(--clr-text-inverse);
+  transition: all 0.3s ease;
+}
+
+.btn-save-date:hover {
+  background: var(--clr-accent-primary);
+  color: var(--clr-accent-strong);
+  transform: scale(1.05);
+}
+
+/* Optional: hide AddEvent injected icon inside Save the Date button */
+.btn-save-date .icon {
+  display: none !important;
+}
+
+
+/* ===========================
+   SECTIONS
+=========================== */
+section {
+  padding: 80px 15px;
+  text-align: center;
+  scroll-margin-top: 90px;
+}
+
+section h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: var(--font-size-section);
+  color: var(--clr-accent-primary);
+  margin-bottom: 24px;
+}
+
+section p {
+  max-width: 90%;
+  margin: auto;
+  color: var(--clr-surface-dark);
+  font-size: var(--font-size-text);
+  line-height: 1.6;
+}
+
+/* ===========================
+   GALLERY
+=========================== */
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 20px;
+}
+
+.gallery-grid img {
+  width: 100%;
+  border-radius: 12px;
+  border: 2px solid var(--clr-border-soft);
+  transition: all 0.25s ease;
+}
+
+.gallery-grid img:hover {
+  box-shadow: 0 8px 20px var(--clr-shadow);
+}
+
+/* ===========================
+   RSVP FORM
+=========================== */
+#rsvp {
+  background: linear-gradient(180deg, var(--clr-surface-dark), var(--clr-surface-deep));
+  color: var(--clr-text-inverse);
+}
+
+.rsvp-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 480px;
+  margin: auto;
+}
+
+#rsvp h2 {
+  color: var(--clr-text-inverse); 
+  margin-bottom: 20px;
+}
+
+#rsvp p {
+  font-size: 1.1rem;
+  margin-bottom: 30px;
+  color: #1d274b; /* ensures the “Please let us know…” text stands out */
+}
+
+#rsvp input,
+#rsvp select,
+#rsvp textarea,
+#rsvp button {
+  display: block;
+  width: 100%;
+  max-width: 400px;
+  margin: 10px auto;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+}
+
+#rsvp button {
+  background-color: #9b779d;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+#rsvp button:hover {
+  background-color: #ccb4ce;
+}
+
+/* ===========================
+   FOOTER
+=========================== */
+footer {
+  background: var(--clr-surface-dark);
+  color: var(--clr-text-inverse);
+  padding: 40px 15px;
+  text-align: center;
+  font-size: 0.95rem;
+}
+
+/* ===========================
+   SCROLL TO TOP BUTTON
+=========================== */
+#scrollTopBtn {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: var(--clr-accent-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transform: scale(0);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+#scrollTopBtn.show {
+  opacity: 1;
+  transform: scale(1);
+}
+
+#scrollTopBtn svg {
+  width: 24px;
+  height: 24px;
+  color: var(--clr-accent-soft);
+  pointer-events: none;
+}
+
+/* ===========================
+   RESPONSIVE
+=========================== */
+@media (max-width: 768px) {
+  :root { 
+    --font-size-countdown: 1.8rem; 
+    --font-size-hero: 2rem; 
+  }
+  .nav ul { gap: 14px; font-size: 0.9rem; }
+  .hero-content p { font-size: var(--font-size-hero); }
+  #countdown { font-size: var(--font-size-countdown); padding: 12px 20px; }
+  section { padding: 60px 10px; }
+}
+
+@media (max-width: 480px) {
+  :root { 
+    --font-size-countdown: 1.5rem; 
+    --font-size-hero: 1.7rem; 
+  }
+  .nav ul { gap: 10px; font-size: 0.8rem; }
+  section { padding: 50px 10px; }
+}
+
+
+
+
+
+
+
+
+
+
+/* ===========================
+   SETTINGS PANEL
+=========================== */
+#settingsPanel {
+  position: fixed;
+  top: 80px;
+  right: 20px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 14px;
+  padding: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  z-index: 2000;
+  display: none;
+  width: 220px;
+  font-family: 'Lato', sans-serif;
+}
+
+#settingsPanel h4 {
+  margin-bottom: 10px;
+  font-size: 0.9rem;
+  color: var(--clr-accent-primary);
+  font-weight: 700;
+}
+
+/* ----------------------------
+   Background Options
+---------------------------- */
+.bg-options {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.bg-options button {
+  border: none;
+  border-radius: 8px;
+  padding: 8px;
+  cursor: pointer;
+  background: var(--clr-accent-soft);
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.bg-options button:hover {
+  background: var(--clr-accent-strong);
+  color: #fff;
+}
+
+.bg-options button.selected {
+  outline: 3px solid var(--clr-accent-primary);
+  box-shadow: 0 0 6px var(--clr-accent-primary);
+}
+
+/* ----------------------------
+   Music Selector
+---------------------------- */
+#settingsPanel label {
+  display: block;
+  font-size: 0.85rem;
+  margin-bottom: 4px;
+  color: var(--clr-accent-primary);
+  font-weight: 600;
+}
+
+#musicSelector {
+  width: 100%;
+  padding: 6px 8px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 0.85rem;
+  cursor: pointer;
+  background: #fff;
+  transition: all 0.3s ease;
+}
+
+#musicSelector:hover {
+  border-color: var(--clr-accent-strong);
+}
+
+/* Highlight selected track */
+#musicSelector option:checked {
+  background: var(--clr-accent-primary);
+  color: #fff;
+}

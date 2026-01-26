@@ -1,0 +1,214 @@
+/* ===========================
+   VARIABLES / THEME
+=========================== */
+:root {
+  --clr-bg: #f9f9f9;
+  --clr-text: #1d1d1d;
+  --clr-accent: #2b1f3d;
+  --clr-accent-hover: #c57ca0;
+  --clr-placeholder: #dcdcdc;
+  --transition-speed: 0.3s;
+
+  --font-size-section: 2rem;
+  --font-size-text: 1rem;
+
+  --gallery-img-size: 120px; /* fixed square size for all images */
+  --gallery-gap: 8px;
+  --section-max-width: 360px; /* 3 images × 120px + gaps */
+}
+
+/* ===========================
+   GLOBAL
+=========================== */
+body {
+  font-family: 'Lato', sans-serif;
+  background: var(--clr-bg);
+  color: var(--clr-text);
+  margin: 0;
+  padding: 0;
+  scroll-behavior: smooth;
+}
+
+a {
+  text-decoration: none;
+  color: var(--clr-accent);
+  transition: color var(--transition-speed) ease;
+}
+
+a:hover {
+  color: var(--clr-accent-hover);
+}
+
+/* ===========================
+   NAVIGATION
+=========================== */
+.nav {
+  position: sticky;
+  top: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 20px;
+  background: #ffffff;
+  border-bottom: 1px solid #ccc;
+  z-index: 100;
+}
+
+.nav-brand {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--clr-accent);
+}
+
+.nav ul {
+  display: flex;
+  gap: 18px;
+  list-style: none;
+}
+
+.nav ul li a {
+  font-weight: 500;
+}
+
+/* ===========================
+   SECTIONS
+=========================== */
+section {
+  padding: 40px 15px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+section h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: var(--font-size-section);
+  color: var(--clr-accent);
+  margin-bottom: 20px;
+}
+
+/* ===========================
+   GALLERY GRID
+=========================== */
+.gallery-wrapper {
+  display: grid;
+  grid-template-columns: repeat(3, var(--gallery-img-size));
+  grid-auto-rows: var(--gallery-img-size);
+  gap: var(--gallery-gap);
+  justify-content: center;
+  max-width: var(--section-max-width);
+  margin-bottom: 20px;
+}
+
+/* individual figure styling */
+.gallery-wrapper figure {
+  margin: 0;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+}
+
+.gallery-wrapper figure:hover {
+  transform: scale(1.03);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.gallery-wrapper img {
+  width: var(--gallery-img-size);
+  height: var(--gallery-img-size);
+  object-fit: cover; /* ensures horizontal/vertical photos fit inside square */
+  background: var(--clr-placeholder);
+  display: block;
+  border: 1px solid #ccc; /* subtle border for separation */
+}
+
+.gallery-wrapper figcaption {
+  font-size: 0.8rem;
+  margin-top: 4px;
+  color: var(--clr-text);
+  text-align: center;
+  word-break: break-word;
+}
+
+/* ===========================
+   PAGINATION
+=========================== */
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.pagination button {
+  background: var(--clr-accent);
+  color: #fff;
+  border: none;
+  padding: 6px 12px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background var(--transition-speed) ease;
+}
+
+.pagination button:hover {
+  background: var(--clr-accent-hover);
+}
+
+/* ===========================
+   LIGHTBOX
+=========================== */
+.lightbox {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.9);
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  flex-direction: column;
+}
+
+.lightbox-img {
+  max-width: 90%;
+  max-height: 80vh;
+  margin-bottom: 10px;
+}
+
+.lightbox-caption {
+  color: #fff;
+  font-size: 1rem;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.lightbox .close,
+.lightbox .prev,
+.lightbox .next {
+  color: #fff;
+  font-size: 2rem;
+  cursor: pointer;
+  margin: 5px;
+  user-select: none;
+  transition: color var(--transition-speed) ease;
+}
+
+.lightbox .close:hover,
+.lightbox .prev:hover,
+.lightbox .next:hover {
+  color: var(--clr-accent-hover);
+}
+
+/* ===========================
+   RESPONSIVE
+=========================== */
+@media (max-width: 480px) {
+  :root {
+    --gallery-img-size: 100px;
+    --section-max-width: 320px;
+    --gallery-gap: 6px;
+  }
+}

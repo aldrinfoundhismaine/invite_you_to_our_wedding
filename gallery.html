@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aldrin John & Sharmaine | Gallery</title>
+
+  <!-- SEO & Social Sharing -->
+  <meta name="description" content="Photo gallery of Aldrin John & Sharmaine Wedding. Memories from our special day!">
+  <meta property="og:title" content="Aldrin John & Sharmaine | Gallery">
+  <meta property="og:description" content="Relive the special moments from our wedding!">
+  <meta property="og:image" content="assets/cover.jpg">
+  <meta property="og:type" content="website">
+
+  <!-- Favicon -->
+  <link rel="icon" href="assets/favicon.png" type="image/png">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lato&display=swap" rel="stylesheet">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/gallery.css">
+
+  <!-- AOS Animation -->
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- ===========================
+       HEADER
+  ============================ -->
+  <header>
+    <nav class="nav">
+      <div class="nav-brand">A & S</div>
+      <ul>
+        <li><a href="home.html">Home</a></li>
+        <li><a href="#church-gallery">Church</a></li>
+        <li><a href="#prenup-gallery">Prenup</a></li>
+        <li><a href="#reception-gallery">Reception</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- ===========================
+       CHURCH GALLERY
+  ============================ -->
+  <section id="church-gallery" data-aos="fade-up">
+    <h2>Church</h2>
+    <div class="gallery-grid"></div>
+  </section>
+
+  <!-- ===========================
+       PRENUP GALLERY
+  ============================ -->
+  <section id="prenup-gallery" data-aos="fade-up">
+    <h2>Prenup</h2>
+    <div class="gallery-grid"></div>
+  </section>
+
+  <!-- ===========================
+       RECEPTION GALLERY
+  ============================ -->
+  <section id="reception-gallery" data-aos="fade-up">
+    <h2>Reception</h2>
+    <div class="gallery-grid"></div>
+  </section>
+
+  <!-- ===========================
+       LIGHTBOX
+  ============================ -->
+  <div id="lightbox" class="lightbox">
+    <span class="close">&times;</span>
+    <img class="lightbox-img" src="" alt="">
+    <div class="lightbox-caption"></div>
+    <a class="prev">&#10094;</a>
+    <a class="next">&#10095;</a>
+  </div>
+
+  <!-- ===========================
+       FOOTER
+  ============================ -->
+  <footer>
+    <p>&copy; 2027 Aldrin John & Sharmaine</p>
+  </footer>
+
+  <!-- ===========================
+       SCRIPTS
+  ============================ -->
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script src="js/gallery.js"></script>
+  <script>
+    AOS.init({ duration: 800, once: true });
+  </script>
+
+</body>
+</html>
