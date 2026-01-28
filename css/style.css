@@ -23,9 +23,6 @@
   /* Layout */
   --radius-lg: clamp(12px, 1vw, 16px);
   --radius-pill: clamp(40px, 5vw, 50px);
-
-  /* Background */
- --body-bg: url("../assets/background/bg1.jpg");
 }
 
 /* ==================================================
@@ -44,7 +41,11 @@ html { scroll-behavior: smooth; }
 body {
   font-family: "Lato", sans-serif;
   color: var(--clr-text-main);
-  background: var(--body-bg) center / cover no-repeat fixed;
+  background-image: url("../assets/background/bg1.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
   transition: background-image 0.6s ease-in-out;
 }
 
@@ -128,7 +129,8 @@ button { cursor: pointer; border: none; }
   z-index: 9999;
 }
 
-/* Overlay behind popup */
+.settings-panel.active { display: block; }
+
 #settingsOverlay {
   display: none;
   position: fixed;
@@ -139,18 +141,10 @@ button { cursor: pointer; border: none; }
   z-index: 9998;
 }
 
-/* Show panel */
-.settings-panel.active {
-  display: block;
-}
-
-#settingsOverlay.active {
-  display: block;
-}
-
+#settingsOverlay.active { display: block; }
 
 /* ==================================================
-   HERO SECTION - FULL RESPONSIVE
+   HERO SECTION
 ================================================== */
 .hero {
   min-height: 100vh;
@@ -162,46 +156,51 @@ button { cursor: pointer; border: none; }
   text-align: center;
   padding: 0 20px;
 }
-/* Countdown (always horizontal, bigger on desktop) */
+
+/* Countdown */
 .hero__countdown-multi {
   display: flex;
   justify-content: center;
   gap: clamp(25px, 3vw, 50px);
   margin: clamp(40px, 5vw, 60px) 0;
-  flex-wrap: nowrap; /* always horizontal */
+  flex-wrap: nowrap;
   z-index: 2;
 }
 
 .countdown-box {
   text-align: center;
-  background: linear-gradient(135deg, #ff7b7b, #ffb27b);
+  background: rgba(50, 20, 70, 0.85);
+  backdrop-filter: blur(15px) saturate(180%);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 28px;
   padding: clamp(25px, 3vw, 45px) clamp(35px, 4vw, 55px);
-  border-radius: clamp(16px, 2vw, 24px);
-  box-shadow: 0 15px 45px rgba(255,123,123,0.45);
-  transition: transform 0.3s, box-shadow 0.3s;
-  min-width: 100px;
-  flex: 1 1 auto;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.35), 0 0 12px rgba(255,255,255,0.1);
+  transition: transform 0.35s ease, box-shadow 0.35s ease, background 0.35s ease;
 }
 
 .countdown-box:hover {
-  transform: scale(1.05);
+  transform: scale(1.08);
+  background: rgba(50, 20, 70, 0.95);
+  box-shadow: 0 12px 35px rgba(0,0,0,0.4), 0 0 15px rgba(255,255,255,0.15);
 }
 
 .countdown-number {
-  font-size: clamp(40px, 6vw, 90px); /* bigger on desktop */
-  font-weight: bold;
-  color: #fff;
+  font-size: clamp(40px, 6vw, 90px);
+  font-weight: 900;
+  color: #e0d7ff;
+  text-shadow: 0 0 8px #e0d7ff, 0 0 20px rgba(224, 215, 255, 0.5);
 }
 
 .countdown-label {
   font-size: clamp(16px, 2.5vw, 26px);
   color: #fff;
+  text-shadow: 0 0 3px #fff, 0 0 10px rgba(255,255,255,0.4);
   margin-top: 5px;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 2px;
 }
 
-/* Hero content (logo + text + actions) */
+/* Hero content */
 .hero__content {
   position: relative;
   z-index: 2;
@@ -212,7 +211,7 @@ button { cursor: pointer; border: none; }
 }
 
 .hero__logo {
-  max-width: clamp(400px, 35vw, 600px); /* bigger on desktop, still responsive */
+  max-width: clamp(400px, 35vw, 600px);
   width: 100%;
   border-radius: clamp(16px, 2vw, 24px);
   box-shadow: 0 12px 40px rgba(0,0,0,0.3);
@@ -252,7 +251,7 @@ button { cursor: pointer; border: none; }
   color: var(--clr-soft);
 }
 
-/* Confetti container */
+/* Confetti */
 #confetti {
   position: absolute;
   top: 0;
@@ -262,7 +261,6 @@ button { cursor: pointer; border: none; }
   pointer-events: none;
   z-index: 1;
 }
-
 
 /* ==================================================
    BUTTONS
@@ -310,8 +308,7 @@ button { cursor: pointer; border: none; }
 /* ==================================================
    RSVP FORM
 ================================================== */
-#rsvp { background: linear-gradient(180deg,
- var(--clr-secondary), var(--clr-primary)); color: var(--clr-text-light); }
+#rsvp { background: linear-gradient(180deg, var(--clr-secondary), var(--clr-primary)); color: var(--clr-text-light); }
 
 .rsvp-form {
   max-width: 520px;
@@ -353,7 +350,6 @@ button { cursor: pointer; border: none; }
   box-shadow: 0 8px 20px var(--clr-shadow);
 }
 
-/* Pagination Buttons */
 .pagination {
   margin: clamp(8px, 2vw, 12px) 0 clamp(20px, 4vw, 30px);
   display: flex;
@@ -375,11 +371,11 @@ button { cursor: pointer; border: none; }
 .pagination button:hover { transform: scale(1.05); background: var(--clr-accent); }
 
 /* ==================================================
-   DRIVE POPUP — FULLSCREEN RESPONSIVE
+   DRIVE POPUP
 ================================================== */
 .drive-popup {
   position: fixed;
-  inset: 0;                  /* full screen */
+  inset: 0;
   width: 100vw;
   height: 100vh;
   background: rgba(0,0,0,0.95);
@@ -395,8 +391,6 @@ button { cursor: pointer; border: none; }
   width: 100%;
   height: 100%;
   border: none;
-  border-radius: 0;          /* wala nang rounded corners para full view */
-  box-shadow: none;          /* full screen view parang Drive mismo */
 }
 
 #driveCaption {
@@ -406,16 +400,35 @@ button { cursor: pointer; border: none; }
   text-align: center;
   opacity: 0.85;
 }
-/* Buttons sa Drive popup */
-.drive-close,
+
+.drive-close {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background: rgba(0,0,0,0.5);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  transition: background 0.2s ease;
+}
+
 .drive-prev,
 .drive-next,
-.drive-download {
+.drive-download,
+.drive-share {
   position: absolute;
   background: rgba(0,0,0,0.45);
   border: none;
   color: #fff;
-  font-size: clamp(1.3rem, 2vw, 1.6rem);
+  font-size: clamp(1.2rem, 2vw, 1.6rem);
   cursor: pointer;
   width: clamp(36px, 5vw, 44px);
   height: clamp(36px, 5vw, 44px);
@@ -428,30 +441,46 @@ button { cursor: pointer; border: none; }
   z-index: 10001;
 }
 
-/* Positions */
-.drive-close { top:20px; right:20px; }
 .drive-download { top:20px; right:70px; }
 .drive-prev { left:20px; top:50%; transform:translateY(-50%); }
 .drive-next { right:20px; top:50%; transform:translateY(-50%); }
-
-/* Hover effects (preserve translate) */
-.drive-prev:hover { transform: translateY(-50%) scale(1.1); }
-.drive-next:hover { transform: translateY(-50%) scale(1.1); }
-.drive-close:hover,
-.drive-download:hover { transform: scale(1.1); }
+.drive-share { top:20px; right:120px; }
 
 .drive-close:hover,
 .drive-download:hover,
 .drive-prev:hover,
-.drive-next:hover {
-  background: rgba(0,0,0,0.75);
+.drive-next:hover,
+.drive-share:hover { background: rgba(0,0,0,0.75); transform: scale(1.1); }
+
+.share-popup {
+  position: absolute;
+  top: 60px;
+  right: 0;
+  display: none;
+  flex-direction: column;
+  background: rgba(0,0,0,0.85);
+  padding: 8px;
+  border-radius: 12px;
+  gap: 6px;
+  z-index: 10002;
 }
 
-
-/* Disable body scroll when popup active */
-body.popup-open {
-  overflow: hidden;
+.share-popup a {
+  color: #fff;
+  font-size: clamp(0.85rem, 1vw, 1rem);
+  padding: 6px 10px;
+  border-radius: 8px;
+  text-align: center;
+  background: rgba(255,255,255,0.1);
+  transition: background 0.2s, transform 0.2s;
 }
+
+.share-popup a:hover {
+  background: rgba(255,255,255,0.25);
+  transform: scale(1.05);
+}
+
+body.popup-open { overflow: hidden; }
 
 /* ==================================================
    MAP
@@ -505,7 +534,7 @@ body.popup-open {
 #scrollTopBtn.show { opacity: 1; transform: scale(1); }
 
 /* ==================================================
-   RESPONSIVE MEDIA QUERIES
+   RESPONSIVE
 ================================================== */
 @media (max-width: 1024px) {
   .hero__logo { max-width: 400px; }
@@ -519,10 +548,7 @@ body.popup-open {
   .hero__text { font-size: clamp(1.6rem, 3vw, 2.8rem); }
   .hero__actions .btn { padding: clamp(12px, 2vw, 20px) clamp(24px, 3vw, 40px); font-size: clamp(0.9rem, 1.2vw, 1.2rem); }
   .hero__countdown-multi { gap: clamp(15px, 2.5vw, 40px); margin: clamp(25px, 4vw, 45px) 0; }
-  .drive-popup iframe {
-    width: 100%;
-    height: 100%;
-  }
+  .drive-popup iframe { width: 100%; height: 100%; }
 }
 
 @media (max-width: 480px) {
@@ -530,22 +556,8 @@ body.popup-open {
   .hero__text { font-size: clamp(1rem, 3vw, 1.6rem); }
   .hero__actions .btn { padding: clamp(8px, 2vw, 14px) clamp(16px, 3vw, 30px); font-size: clamp(0.75rem, 2vw, 0.9rem); }
 
- .hero__countdown-multi {
-    gap: 12px;         /* slightly smaller gap */
-    margin: 20px 0;    /* reduce top/bottom spacing */
-  }
-
-  .countdown-box {
-    padding: 14px 18px;  /* slightly smaller boxes */
-    min-width: 80px;     /* allow a bit of shrink */
-  }
-
-  .countdown-number {
-    font-size: 28px;     /* slightly smaller numbers */
-  }
-
-  .countdown-label {
-    font-size: 14px;     /* slightly smaller labels */
-  }
+  .hero__countdown-multi { gap: 12px; margin: 20px 0; }
+  .countdown-box { padding: 14px 18px; min-width: 80px; }
+  .countdown-number { font-size: 28px; }
+  .countdown-label { font-size: 14px; }
 }
-
