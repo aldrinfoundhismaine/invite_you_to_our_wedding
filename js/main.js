@@ -1,343 +1,412 @@
 /* ==================================================
-   MAIN JS FOR WEDDING INVITATION
-   Features: Background music, confetti, countdown,
-             scroll-to-top, AOS, RSVP confetti,
-             Universal Save the Date button
+   MAIN JS — WEDDING INVITATION (FINAL CLEAN)
+   Features:
+   - Background music + selector
+   - Hero & RSVP confetti
+   - Countdown timer
+   - Scroll effects
+   - RSVP submit (Google Sheets)
+   - Google Drive galleries w/ pagination + download
+   - Lightbox (keyboard + arrows)
+   - Settings panel (background + music)
 ================================================== */
+
 document.addEventListener("DOMContentLoaded", () => {
 
-  /* ----------------------------
-     HELPER FUNCTIONS
-  ---------------------------- */
-  const $ = (selector) => document.querySelector(selector);
-  const $$ = (selector) => document.querySelectorAll(selector);
+  /* ==================================================
+     HELPERS
+  ================================================== */
+  const $  = (q) => document.querySelector(q);
+  const $$ = (q) => document.querySelectorAll(q);
   const rand = (min, max) => Math.random() * (max - min) + min;
-  const randomFrom = (arr) => arr[Math.floor(Math.random() * arr.length)];
+  const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
 
-  /* ----------------------------
+  /* ==================================================
      BACKGROUND MUSIC
-  ---------------------------- */
+  ================================================== */
   const bgMusic = $("#bgMusic");
   const musicToggle = $("#musicToggle");
-
   let isPlaying = false;
 
   if (bgMusic && musicToggle) {
-    // Set initial volume
     bgMusic.volume = 0.3;
+    bgMusic.play()
+      .then(() => { isPlaying = true; musicToggle.textContent = "⏸"; })
+      .catch(() => { musicToggle.textContent = "▶"; });
 
-    // Try autoplay (may fail due to browser restrictions)
-    bgMusic.play().then(() => {
-      isPlaying = true;
-      musicToggle.textContent = "⏸";
-    }).catch(() => {
-      console.log("Autoplay blocked. Music will start on user interaction.");
-      musicToggle.textContent = "▶";
-    });
-
-    // Play/pause toggle
     musicToggle.addEventListener("click", () => {
-      if (bgMusic.paused) {
-        bgMusic.play();
-        isPlaying = true;
-        musicToggle.textContent = "⏸";
-      } else {
-        bgMusic.pause();
-        isPlaying = false;
-        musicToggle.textContent = "▶";
-      }
+      if (bgMusic.paused) { bgMusic.play(); musicToggle.textContent = "⏸"; isPlaying = true; }
+      else { bgMusic.pause(); musicToggle.textContent = "▶"; isPlaying = false; }
     });
   }
 
-  /* ----------------------------
+  /* ==================================================
      CONFETTI COLORS
-  ---------------------------- */
+  ================================================== */
   const cssVars = getComputedStyle(document.documentElement);
   const CONFETTI_COLORS = [
-    cssVars.getPropertyValue("--clr-accent-primary")?.trim() || "#9b779d",
-    cssVars.getPropertyValue("--clr-accent-strong")?.trim() || "#ccb4ce",
-    cssVars.getPropertyValue("--clr-accent-soft")?.trim() || "#c9907c"
+    cssVars.getPropertyValue("--clr-secondary").trim() || "#9b779d",
+    cssVars.getPropertyValue("--clr-accent").trim() || "#c9907c",
+    cssVars.getPropertyValue("--clr-soft").trim() || "#f3e4e1"
   ];
 
-  /* ----------------------------
+  /* ==================================================
      HERO CONFETTI
-  ---------------------------- */
+  ================================================== */
   const confettiContainer = $("#confetti");
 
-  function createConfetti(container, sizeRange = [4, 10], yStart = -10, yEnd = 110) {
+  function spawnConfetti(container) {
     if (!container) return;
-
-    const conf = document.createElement("span");
-    const size = rand(sizeRange[0], sizeRange[1]);
-
-    conf.style.cssText = `
+    const piece = document.createElement("span");
+    const size = rand(4, 10);
+    piece.style.cssText = `
       position: absolute;
       left: ${rand(0, 100)}%;
-      top: ${yStart}px;
+      top: -10px;
       width: ${size}px;
       height: ${size}px;
-      background-color: ${randomFrom(CONFETTI_COLORS)};
       border-radius: 50%;
+      background: ${pick(CONFETTI_COLORS)};
       opacity: ${rand(0.4, 0.9)};
       pointer-events: none;
     `;
-
-    conf.animate(
-      [
-        { transform: "translateY(0) rotate(0deg)" },
-        { transform: `translateY(${yEnd}vh) rotate(${rand(180, 540)}deg)` },
-      ],
+    piece.animate(
+      [{ transform: "translateY(0) rotate(0deg)" },
+       { transform: `translateY(110vh) rotate(${rand(180, 540)}deg)` }],
       { duration: rand(4000, 6500), easing: "linear", fill: "forwards" }
     );
-
-    container.appendChild(conf);
-    setTimeout(() => conf.remove(), 7000);
+    container.appendChild(piece);
+    setTimeout(() => piece.remove(), 7000);
   }
 
-  if (confettiContainer) setInterval(() => createConfetti(confettiContainer), 250);
+  if (confettiContainer) setInterval(() => spawnConfetti(confettiContainer), 250);
 
-  /* ----------------------------
+  /* ==================================================
      COUNTDOWN TIMER
-  ---------------------------- */
-  const countdownEl = $("#countdown");
-  if (countdownEl) {
-    const weddingDate = new Date("June 20, 2027 14:00:00").getTime();
+  ================================================== */
+  const targetDate = new Date("June 20, 2027 00:00:00").getTime();
 
-    const parts = {
-      days: $("#days"),
-      hours: $("#hours"),
-      minutes: $("#minutes"),
-      seconds: $("#seconds"),
-    };
+  function updateCountdown() {
+    const now = new Date().getTime();
+    const distance = targetDate - now;
 
-    const updateCountdown = () => {
-      const diff = weddingDate - Date.now();
-      if (diff <= 0) {
-        countdownEl.textContent = "Today is the big day 💍";
-        return;
-      }
-      const values = {
-        days: Math.floor(diff / (1000 * 60 * 60 * 24)),
-        hours: Math.floor((diff / (1000 * 60 * 60)) % 24),
-        minutes: Math.floor((diff / (1000 * 60)) % 60),
-        seconds: Math.floor((diff / 1000) % 60),
-      };
-      Object.keys(values).forEach(key => {
-        parts[key].textContent = String(values[key]).padStart(2, "0");
-      });
-    };
+    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-    updateCountdown();
-    setInterval(updateCountdown, 1000);
+    $("#daysNumber").innerText = days > 0 ? days : 0;
+    $("#hoursNumber").innerText = hours < 10 ? "0" + hours : hours;
+    $("#minutesNumber").innerText = minutes < 10 ? "0" + minutes : minutes;
+    $("#secondsNumber").innerText = seconds < 10 ? "0" + seconds : seconds;
   }
 
-  /* ----------------------------
-     INITIALIZE AOS
-  ---------------------------- */
-  if (window.AOS) {
-    AOS.init({
-      duration: 1000,
-      once: true,
-      easing: "ease-out-cubic",
-    });
-  }
+  setInterval(updateCountdown, 1000);
+  updateCountdown();
 
-  /* ----------------------------
-     NAV SCROLL SHADOW
-  ---------------------------- */
+  /* ==================================================
+     AOS INITIALIZATION
+  ================================================== */
+  if (window.AOS) AOS.init({ duration: 1000, once: true, easing: "ease-out-cubic" });
+
+  /* ==================================================
+     NAV SHADOW + SCROLL TO TOP
+  ================================================== */
   const nav = $(".nav");
-  if (nav) {
-    window.addEventListener("scroll", () => {
-      nav.style.boxShadow = window.scrollY > 30 ? "0 6px 20px rgba(0,0,0,0.25)" : "none";
-    });
-  }
+  const scrollTopBtn = $("#scrollTopBtn");
 
-  /* ----------------------------
-     SCROLL TO TOP BUTTON
-  ---------------------------- */
-  const scrollBtn = $("#scrollTopBtn");
-  if (scrollBtn) {
-    window.addEventListener("scroll", () => {
-      scrollBtn.classList.toggle("show", window.scrollY > 200);
-    });
+  window.addEventListener("scroll", () => {
+    if (nav) nav.style.boxShadow = window.scrollY > 30 ? "0 6px 20px rgba(0,0,0,0.25)" : "none";
+    if (scrollTopBtn) scrollTopBtn.classList.toggle("show", window.scrollY > 200);
+  });
 
-    scrollBtn.addEventListener("click", () => {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    });
-  }
+  scrollTopBtn?.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
 
-  /* ----------------------------
+  /* ==================================================
      RSVP CONFETTI
-  ---------------------------- */
-  const attendance = $("#attendance");
+  ================================================== */
   function launchRSVPConfetti() {
-    const pieces = 35;
-    for (let i = 0; i < pieces; i++) {
-      const conf = document.createElement("span");
+    for (let i = 0; i < 35; i++) {
+      const piece = document.createElement("span");
       const size = rand(6, 10);
-
-      conf.style.cssText = `
+      piece.style.cssText = `
         position: fixed;
         left: ${rand(0, 100)}vw;
         top: -10px;
         width: ${size}px;
         height: ${size}px;
         border-radius: 50%;
-        background-color: ${randomFrom(CONFETTI_COLORS)};
-        pointer-events: none;
+        background: ${pick(CONFETTI_COLORS)};
         z-index: 9999;
+        pointer-events: none;
       `;
-
-      conf.animate(
-        [
-          { transform: "translateY(0) rotate(0deg)", opacity: 1 },
-          { transform: `translateY(300px) rotate(${rand(180, 720)}deg)`, opacity: 0 },
-        ],
+      piece.animate(
+        [{ transform: "translateY(0) rotate(0)", opacity: 1 },
+         { transform: `translateY(300px) rotate(${rand(180, 720)}deg)`, opacity: 0 }],
         { duration: 2200, easing: "ease-out", fill: "forwards" }
       );
-
-      setTimeout(() => conf.remove(), 2300);
+      document.body.appendChild(piece);
+      setTimeout(() => piece.remove(), 2300);
     }
   }
 
-  /* ----------------------------
-     UNIVERSAL SAVE THE DATE BUTTON
-  ---------------------------- */
-  const saveBtn = document.getElementById("saveDateButton");
-  if (saveBtn) {
-    saveBtn.addEventListener("click", (e) => {
-      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-
-      if (!isMobile) {
-        e.preventDefault();
-        window.open(
-          "https://www.google.com/calendar/render?action=TEMPLATE&text=Aldrin+&+Sharmaine+Wedding&dates=20270620T160000/20270620T200000&details=We+can’t+wait+to+celebrate+with+you!&location=Mary,+Mother+of+Good+Counsel+Parish+Church",
-          "_blank"
-        );
-      }
-    });
-  }
-
-  /* ----------------------------
+  /* ==================================================
      RSVP FORM SUBMISSION
-  ---------------------------- */
+  ================================================== */
   const rsvpForm = $(".rsvp-form");
   if (rsvpForm) {
     rsvpForm.addEventListener("submit", async (e) => {
       e.preventDefault();
-
-      const data = {
-        name: rsvpForm.querySelector('[name="name"]').value,
-        attendance: rsvpForm.querySelector('[name="attendance"]').value,
-        message: rsvpForm.querySelector('[name="message"]').value
-      };
-
+      const payload = new URLSearchParams({
+        name: rsvpForm.name.value,
+        attendance: rsvpForm.attendance.value,
+        message: rsvpForm.message.value
+      });
       try {
-        const res = await fetch(
+        const response = await fetch(
           "https://script.google.com/macros/s/AKfycbyMtejkOuP4GFjI2ubPV3DEmubOiLoxrASm7nWUBS6fZv5FRqd2RbMm217IZwoGPV-7/exec",
-          {
-            method: "POST",
-            body: new URLSearchParams(data)
-          }
+          { method: "POST", body: payload }
         );
-        const json = await res.json();
-        if (json.status === "success") {
-          rsvpForm.reset();
-          launchRSVPConfetti();
-
-          const popup = document.createElement("div");
-          popup.textContent = "RSVP submitted! 💜";
-          popup.style.cssText = `
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(0);
-            background-color: rgba(255,255,255,0.95);
-            color: #9b779d;
-            padding: 25px 40px;
-            border-radius: 16px;
-            font-size: 1.2rem;
-            font-weight: 700;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-            z-index: 10000;
-            text-align: center;
-            transition: transform 0.4s ease, opacity 0.4s ease;
-          `;
-          document.body.appendChild(popup);
-          requestAnimationFrame(() => {
-            popup.style.transform = "translate(-50%, -50%) scale(1)";
-          });
-          setTimeout(() => {
-            popup.style.transform = "translate(-50%, -50%) scale(0)";
-            popup.style.opacity = "0";
-            setTimeout(() => popup.remove(), 400);
-          }, 2000);
-        } else {
-          alert("Something went wrong. Please try again.");
-        }
-      } catch (err) {
-        console.error(err);
-        alert("Unable to submit RSVP. Please try again later.");
-      }
+        const result = await response.json();
+        if (result.status === "success") { rsvpForm.reset(); launchRSVPConfetti(); alert("RSVP submitted! 💜"); }
+        else alert("Submission failed. Please try again.");
+      } catch (err) { alert("Network error. Please try again later."); }
     });
   }
 
-  /* ----------------------------
-     SETTINGS PANEL: BACKGROUND + MUSIC
-  ---------------------------- */
+  /* ==================================================
+     SETTINGS PANEL (BACKGROUND ONLY)
+  ================================================== */
   const settingsToggle = $("#settingsToggle");
   const settingsPanel = $("#settingsPanel");
   const bgButtons = $$(".bg-options button");
-  const musicSelector = $("#musicSelector"); // select element inside settings for tracks
-  const musicToggleBtn = $("#musicToggle"); // same toggle in nav
 
-  // BACKGROUND
-  const applyBackground = (file) => {
-    if (!file) return;
-    const url = encodeURI(`./assets/background/${file}`);
-    document.body.style.backgroundImage = `url("${url}")`;
-    localStorage.setItem("bodyBackground", file);
-  };
-
-  if (settingsToggle && settingsPanel) {
-    settingsToggle.addEventListener("click", () => {
-      settingsPanel.style.display = settingsPanel.style.display === "block" ? "none" : "block";
-    });
-  }
+  settingsToggle?.addEventListener("click", () => {
+    settingsPanel.style.display = settingsPanel.style.display === "block" ? "none" : "block";
+  });
 
   bgButtons.forEach(btn => {
-    btn.addEventListener("click", () => applyBackground(btn.dataset.bg));
+    btn.addEventListener("click", () => {
+      const file = btn.dataset.bg;
+      document.body.style.backgroundImage = `url("./assets/background/${file}")`;
+      localStorage.setItem("bg", file);
+    });
   });
 
-  // Load saved background
-  const savedBg = localStorage.getItem("bodyBackground");
-  if (savedBg) applyBackground(savedBg);
+  const savedBg = localStorage.getItem("bg");
+  if (savedBg) document.body.style.backgroundImage = `url("./assets/background/${savedBg}")`;
 
-  // MUSIC
-  musicSelector?.addEventListener("change", () => {
-    const track = musicSelector.value;
-    if (track) {
-      bgMusic.src = track;
-      bgMusic.play();
-      isPlaying = true;
-      musicToggleBtn.textContent = "⏸";
-      localStorage.setItem("bgMusicTrack", track);
-    } else {
-      bgMusic.pause();
-      isPlaying = false;
-      musicToggleBtn.textContent = "▶";
-      localStorage.removeItem("bgMusicTrack");
-    }
-  });
+  /* ==================================================
+     GOOGLE DRIVE GALLERY SYSTEM
+  ================================================== */
+  const folders = { church: "16BPBMPTwZwZgTI2tnNV1Tk1EKKB4wMyv", prenup: "1ZoSsPSECRq062Bx4KAhKQUtnj24ePRAn", reception: "1FqqNku0QNhGgWMJAiec6944SVjXeAZ4i" };
+  const apiKey = "AIzaSyBgEstYNO3_dKI4mC1KdsPRpx_p2gpDsXQ";
+  const sectionMap = { church: "church-gallery", prenup: "prenup-gallery", reception: "reception-gallery" };
+  const PHOTOS_PER_PAGE = 16;
+  const PLACEHOLDER = "https://via.placeholder.com/400x400/c0c0c0/ffffff?text=Upload+Here";
 
-  // Load saved track
-  const savedTrack = localStorage.getItem("bgMusicTrack");
-  if (savedTrack) {
-    musicSelector.value = savedTrack;
-    bgMusic.src = savedTrack;
-    bgMusic.play();
-    isPlaying = true;
-    musicToggleBtn.textContent = "⏸";
+  async function fetchImages(folderId) {
+    const url = `https://www.googleapis.com/drive/v3/files?q='${folderId}'+in+parents+and+mimeType contains 'image/'&fields=files(id,name,thumbnailLink)&key=${apiKey}`;
+    try { const res = await fetch(url); const data = await res.json(); return data.files || []; }
+    catch (err) { console.error("Drive fetch error:", err); return []; }
   }
+
+  function paginate(files) {
+    const pages = [];
+    for (let i = 0; i < files.length; i += PHOTOS_PER_PAGE) {
+      const slice = files.slice(i, i + PHOTOS_PER_PAGE);
+      while (slice.length < PHOTOS_PER_PAGE) slice.push({ name: "Placeholder", thumbnailLink: PLACEHOLDER });
+      pages.push(slice);
+    }
+    return pages;
+  }
+
+  async function loadGallery(key) {
+    const wrapper = $(`#${sectionMap[key]}`);
+    if (!wrapper) return;
+
+    const pagination = $(`#${key}-pagination`);
+    const prevBtn = pagination?.querySelector(".prev");
+    const nextBtn = pagination?.querySelector(".next");
+
+    const files = await fetchImages(folders[key]);
+    const pages = paginate(files);
+    let currentPage = 0;
+
+    function renderPage() {
+      wrapper.innerHTML = "";
+      pages[currentPage].forEach(file => {
+        const fig = document.createElement("figure");
+        fig.dataset.id = file.id || "";
+        fig.dataset.name = file.name || "Photo";
+        fig.innerHTML = `<img src="${file.thumbnailLink || PLACEHOLDER}" loading="lazy" alt="Wedding Photo">`;
+        wrapper.appendChild(fig);
+      });
+    }
+
+    renderPage();
+
+    prevBtn?.addEventListener("click", () => { currentPage = (currentPage - 1 + pages.length) % pages.length; renderPage(); });
+    nextBtn?.addEventListener("click", () => { currentPage = (currentPage + 1) % pages.length; renderPage(); });
+  }
+
+ /* ==================================================
+   DRIVE POPUP + DOWNLOAD + SMOOTH ANIMATIONS
+================================================== */
+let currentGallery = [], currentIndex = 0;
+const popup = $("#drivePopup");
+const frame = $("#driveFrame");
+const caption = $("#driveCaption");
+
+// OPEN POPUP: fade in + slide up
+function openDrivePreview(fileId, title, galleryArray) {
+  currentGallery = galleryArray;
+  currentIndex = galleryArray.findIndex(f => f.id === fileId);
+
+  frame.src = `https://drive.google.com/file/d/${fileId}/preview`;
+  caption.textContent = title;
+
+  // Initial state: slightly below + transparent
+  popup.style.display = "flex";
+  popup.style.opacity = 0;
+  popup.style.transform = "translateY(20%)";
+  popup.style.transition = "opacity 0.35s ease, transform 0.35s ease";
+
+  // Animate to center
+  requestAnimationFrame(() => {
+    popup.style.opacity = 1;
+    popup.style.transform = "translateY(0)";
+  });
+}
+
+// CLOSE POPUP: fade out + slide down
+function closeDrivePreview() {
+  popup.style.transition = "opacity 0.3s ease, transform 0.3s ease";
+  popup.style.opacity = 0;
+  popup.style.transform = "translateY(20%)";
+  setTimeout(() => {
+    frame.src = "";
+    popup.style.display = "none";
+  }, 300);
+}
+
+// Animate horizontal slide for next/prev images with zoom effect
+function slideToImage(newIndex, direction) {
+  if (!currentGallery.length) return;
+
+  const next = currentGallery[newIndex];
+  if (!next?.id) return;
+
+  const width = popup.offsetWidth;
+  const startX = direction * width;
+  const endX = 0;
+
+  // Place new image offscreen and slightly scaled down
+  frame.style.transition = "none";
+  frame.style.transform = `translateX(${startX}px) scale(0.95)`;
+  frame.src = `https://drive.google.com/file/d/${next.id}/preview`;
+  caption.textContent = next.name;
+
+  // Animate to center and normal scale
+  requestAnimationFrame(() => {
+    frame.style.transition = "transform 0.35s ease";
+    frame.style.transform = `translateX(${endX}px) scale(1)`;
+  });
+
+  currentIndex = newIndex;
+}
+
+
+function showNext() {
+  const newIndex = (currentIndex + 1) % currentGallery.length;
+  slideToImage(newIndex, 1);
+}
+
+function showPrev() {
+  const newIndex = (currentIndex - 1 + currentGallery.length) % currentGallery.length;
+  slideToImage(newIndex, -1);
+}
+
+// DOWNLOAD
+$(".drive-download")?.addEventListener("click", () => {
+  if (!currentGallery.length) return;
+  const current = currentGallery[currentIndex];
+  if (!current?.id) return;
+  const downloadUrl = `https://drive.google.com/uc?export=download&id=${current.id}`;
+  const newTab = window.open(downloadUrl, "_blank");
+  if (!newTab) {
+    const link = document.createElement("a");
+    link.href = downloadUrl;
+    link.download = current.name || "photo";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+});
+
+// CLOSE BUTTON & OUTSIDE CLICK
+$(".drive-close")?.addEventListener("click", closeDrivePreview);
+popup?.addEventListener("click", e => { if (e.target.id === "drivePopup") closeDrivePreview(); });
+
+// KEYBOARD NAV
+document.addEventListener("keydown", e => {
+  if (popup.style.display !== "flex") return;
+  if (e.key === "Escape") closeDrivePreview();
+  if (e.key === "ArrowRight") showNext();
+  if (e.key === "ArrowLeft") showPrev();
+});
+
+// CLICK IMAGE TO OPEN
+document.addEventListener("click", e => {
+  const fig = e.target.closest(".gallery-wrapper figure");
+  if (!fig) return;
+  const galleryWrapper = fig.closest(".gallery-wrapper");
+  const figures = Array.from(galleryWrapper.querySelectorAll("figure"));
+  const galleryArray = figures.map(f => ({ id: f.dataset.id, name: f.dataset.name }));
+  openDrivePreview(fig.dataset.id, fig.dataset.name, galleryArray);
+});
+
+/* ==================================================
+   TOUCH SWIPE
+================================================== */
+let touchStartX = 0, touchStartY = 0, touchEndX = 0, touchEndY = 0;
+const swipeThreshold = 50;
+
+popup?.addEventListener("touchstart", e => {
+  touchStartX = e.changedTouches[0].screenX;
+  touchStartY = e.changedTouches[0].screenY;
+});
+
+popup?.addEventListener("touchend", e => {
+  touchEndX = e.changedTouches[0].screenX;
+  touchEndY = e.changedTouches[0].screenY;
+  handleSwipeGesture();
+});
+
+function handleSwipeGesture() {
+  const diffX = touchEndX - touchStartX;
+  const diffY = touchEndY - touchStartY;
+
+  // Horizontal swipe → next/prev with slide
+  if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > swipeThreshold) {
+    if (diffX < 0) showNext();
+    else showPrev();
+  }
+  // Vertical swipe → close with fade/slide
+  else if (Math.abs(diffY) > Math.abs(diffX) && Math.abs(diffY) > swipeThreshold) {
+    const dir = diffY < 0 ? -1 : 1;
+    popup.style.transition = "opacity 0.3s ease, transform 0.3s ease";
+    popup.style.transform = `translateY(${dir * 100}%)`;
+    popup.style.opacity = 0;
+    setTimeout(() => closeDrivePreview(), 300);
+  }
+}
+
+
+
+  /* ==================================================
+     INIT GALLERIES
+  ================================================== */
+  Object.keys(folders).forEach(loadGallery);
 
 });

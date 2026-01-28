@@ -1,0 +1,222 @@
+/* ==================================================
+   THEME VARIABLES
+================================================== */
+:root {
+  /* Colors */
+  --clr-bg-main: #f9f4f7;
+  --clr-bg-glass: rgba(29, 39, 75, 0.85);
+  --clr-primary: #1d274b;
+  --clr-secondary: #9b779d;
+  --clr-accent: #c9907c;
+  --clr-soft: #f3e4e1;
+  --clr-text-main: #1d1d1d;
+  --clr-text-light: #ffffff;
+  --clr-text-muted: #6b6b6b;
+  --clr-shadow: rgba(0,0,0,0.25);
+
+  /* Typography */
+  --font-hero: 2.5rem;
+  --font-body: 1rem;
+  --font-countdown: 2rem;
+
+  /* Layout */
+  --radius-lg: 16px;
+  --radius-pill: 50px;
+
+  /* Background */
+  --hero-bg: url("../assets/background/bg1.jpg");
+}
+
+/* ==================================================
+   RESET / BASE
+================================================== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: "Lato", sans-serif;
+  color: var(--clr-text-main);
+  background: var(--hero-bg) center / cover no-repeat fixed;
+  overflow-x: hidden;
+}
+
+img { max-width: 100%; display: block; }
+
+a { text-decoration: none; color: inherit; }
+
+button { cursor: pointer; border: none; }
+
+/* ==================================================
+   HASHTAG
+================================================== */
+#hashtag {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  padding: 6px 0;
+  text-align: center;
+  background: rgba(155, 119, 157, 0.95);
+  color: var(--clr-text-light);
+  font-weight: bold;
+  letter-spacing: 1px;
+  z-index: 1000;
+}
+
+/* ==================================================
+   HERO SECTION
+================================================== */
+#hero {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0 20px;
+  background: var(--hero-bg) center / cover no-repeat;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  animation: fadeInUp 1s ease forwards;
+}
+
+.hero-logo {
+  max-width: 300px;
+  width: 100%;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+  animation: fadeIn 1s ease forwards;
+}
+
+.hero-content p {
+  font-size: var(--font-hero);
+  color: var(--clr-secondary);
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+/* Hero Button */
+.hero-buttons button {
+  padding: 16px 36px;
+  border-radius: var(--radius-pill);
+  background: linear-gradient(135deg, var(--clr-secondary), var(--clr-primary));
+  color: var(--clr-text-light);
+  font-weight: bold;
+  font-size: 1rem;
+  transition: transform 0.3s, background 0.3s;
+}
+.hero-buttons button:hover {
+  transform: scale(1.05);
+  background: var(--clr-accent);
+}
+
+/* ==================================================
+   COUNTDOWN
+================================================== */
+.hero__countdown-multi {
+  display: flex;
+  justify-content: center;
+  gap: clamp(15px, 2vw, 30px);
+  margin-bottom: 30px;
+  z-index: 2;
+  flex-wrap: nowrap; /* always horizontal */
+}
+
+.countdown-box {
+  background: linear-gradient(135deg, #ff7b7b, #ffb27b);
+  padding: clamp(15px, 2vw, 25px) clamp(25px, 3vw, 35px);
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(255,123,123,0.4);
+  text-align: center;
+  transition: transform 0.3s, box-shadow 0.3s;
+  min-width: 80px;
+}
+
+.countdown-box:hover {
+  transform: scale(1.05);
+  box-shadow: 0 15px 35px rgba(255,123,123,0.5);
+}
+
+.countdown-number {
+  font-size: clamp(30px, 4vw, 60px);
+  font-weight: bold;
+  color: #fff;
+}
+
+.countdown-label {
+  font-size: clamp(14px, 1.5vw, 20px);
+  color: #fff;
+  margin-top: 5px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* ==================================================
+   CONFETTI
+================================================== */
+#confetti {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ==================================================
+   ANIMATIONS
+================================================== */
+@keyframes fadeInUp {
+  0% { opacity: 0; transform: translateY(30px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+/* ==================================================
+   RESPONSIVE
+================================================== */
+@media (max-width: 1024px) {
+  .hero-content p { font-size: 2rem; }
+  .countdown-number { font-size: 50px; }
+  .countdown-label { font-size: 18px; }
+  .hero-logo { max-width: 250px; }
+}
+
+@media (max-width: 768px) {
+  .hero-content p { font-size: 1.8rem; }
+  .countdown-number { font-size: 40px; }
+  .countdown-label { font-size: 16px; }
+  .hero-logo { max-width: 220px; }
+  .hero__countdown-multi { gap: 15px; }
+}
+
+@media (max-width: 480px) {
+  .hero-content p { font-size: 1.5rem; }
+  .countdown-box { padding: 18px 25px; }
+  .hero-buttons button { padding: 12px 28px; font-size: 0.9rem; }
+  .hero__countdown-multi {
+    flex-direction: row; /* force horizontal */
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+}

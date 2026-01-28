@@ -25,7 +25,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
 
   <!-- Styles -->
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/invitation.css">
 
   <!-- AddEvent Script -->
   <script src="https://addevent.com/libs/atc/1.6.1/atc.min.js" async defer></script>
@@ -40,18 +40,27 @@
   ========================= -->
   <section id="hero">
 
-    <!-- Hero Background Video -->
-    <video autoplay muted loop playsinline id="bgVideo" poster="assets/video-fallback.jpg">
-      <source src="assets/video.mp4" type="video/mp4">
-    </video>
 
-    <!-- Countdown Timer -->
-    <div id="countdown">
-      <span id="days">00</span>d
-      <span id="hours">00</span>h
-      <span id="minutes">00</span>m
-      <span id="seconds">00</span>s
-    </div>
+<!-- Multi-box Countdown -->
+<div id="countdownBoxes" class="hero__countdown-multi">
+  <div class="countdown-box">
+    <div id="daysNumber" class="countdown-number">0</div>
+    <div class="countdown-label">days</div>
+  </div>
+  <div class="countdown-box">
+    <div id="hoursNumber" class="countdown-number">0</div>
+    <div class="countdown-label">hrs</div>
+  </div>
+  <div class="countdown-box">
+    <div id="minutesNumber" class="countdown-number">0</div>
+    <div class="countdown-label">mins</div>
+  </div>
+  <div class="countdown-box">
+    <div id="secondsNumber" class="countdown-number">0</div>
+    <div class="countdown-label">secs</div>
+  </div>
+</div>
+
 
     <!-- Hero Content -->
     <div class="hero-content" data-aos="fade-up">
