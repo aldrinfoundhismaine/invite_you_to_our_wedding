@@ -34,6 +34,7 @@
   padding: 0;
 }
 
+
 html {
   scroll-behavior: smooth;
 }
@@ -42,6 +43,13 @@ body {
   font-family: "Lato", sans-serif;
   color: var(--clr-text-main);
   background-color: var(--clr-bg-main);
+
+  /* Background image */
+  background-image: url("../assets/background/bg13.png"); /* replace with your file name */
+  background-size: cover;      /* make it cover the whole viewport */
+  background-position: center; /* center the image */
+  background-repeat: no-repeat;
+
   line-height: 1.5;
 }
 
@@ -306,31 +314,101 @@ button {
   color: var(--clr-text-muted);
 }
 
-/* ==================================================
-   RSVP FORM
-================================================== */
+
+/* =========================
+   RSVP SECTION STYLING
+========================= */
 #rsvp {
-  background: linear-gradient(180deg, var(--clr-secondary), var(--clr-primary));
-  color: var(--clr-text-light);
-  border-radius: var(--radius-lg);
+   background-image: url("../assets/background/bg6.jpg"); /* replace with your file name */
+  padding: 60px 20px;
+  text-align: center;
+  position: relative;
 }
 
+#rsvp h2.section__title {
+  font-size: 2rem;
+  margin-bottom: 10px;
+  color: #1d274b;
+}
+
+#rsvp p {
+  font-size: 1.1rem;
+  margin-bottom: 40px;
+  color: #5f27cd;
+}
+
+/* Form container */
 .rsvp-form {
+  background: #ffffff;
+  padding: 30px 25px;
+  max-width: 500px;
+  margin: 0 auto;
+  border-radius: 15px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  max-width: 100%;
-  margin: 10px auto 0;
+  gap: 15px;
 }
 
+/* Inputs and textarea */
 .rsvp-form input,
 .rsvp-form select,
 .rsvp-form textarea {
-  padding: 8px;
+  width: 100%;
+  padding: 12px 15px;
   border-radius: 8px;
-  border: none;
-  font-size: var(--font-body);
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  outline: none;
+  transition: border 0.3s, box-shadow 0.3s;
 }
+
+.rsvp-form input:focus,
+.rsvp-form select:focus,
+.rsvp-form textarea:focus {
+  border-color: #c9907c;
+  box-shadow: 0 0 8px rgba(201, 144, 124, 0.3);
+}
+
+/* Submit button */
+.rsvp-form .btn--secondary {
+  background-color: #c9907c;
+  color: #fff;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+/* RSVP submit button matches other theme buttons */
+.rsvp-form .btn {
+  padding: 8px 16px;
+  font-size: 0.9rem;
+  border-radius: var(--radius-pill);
+  font-weight: bold;
+  color: var(--clr-text-light);
+  background: linear-gradient(135deg, var(--clr-secondary), var(--clr-primary));
+  transition: 0.3s;
+}
+
+.rsvp-form .btn:hover {
+  background: var(--clr-accent);
+  transform: scale(1.05);
+}
+
+
+/* RSVP message status */
+.rsvp-message {
+  margin-top: 10px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  opacity: 0;
+  transition: opacity 0.5s;
+}
+
+
 
 /* ==================================================
    DRIVE POPUP
@@ -462,11 +540,13 @@ button {
   position: relative;
   width: 92%;
   max-width: 600px;
+  
   margin: 20px auto;
 }
 
 #details {
   width: 100%;
+  height: 430px;
   border-radius: var(--radius-lg);
   display: block;
 }
@@ -476,8 +556,8 @@ button {
 .map-hotspot {
   position: absolute;
   cursor: pointer;
-  border: 2px solid var(--clr-accent); /* visible border */
-  background: rgba(201, 144, 124, 0.3); /* semi-transparent fill */
+
+  background: rgba(201, 145, 124, 0); /* semi-transparent fill */
   border-radius: 8px;
   transition: transform 0.2s, background 0.2s;
   display: flex;
@@ -563,7 +643,9 @@ button {
   from {transform: scale(.85); opacity: 0;}
   to {transform: scale(1); opacity: 1;}
 }
-/* STORY SECTION BACKGROUND */
+/* =========================
+   STORY SECTION BACKGROUND
+========================= */
 #story {
   background: url('../assets/background/bg11.jpg') no-repeat center center;
   background-size: cover;
@@ -571,22 +653,53 @@ button {
   color: #fff;
   text-align: center;
   border-radius: 14px;
-  height: 80vh; /* default: 80% ng screen height */
+
+  /* Grow with content, at least full viewport height */
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  gap: 20px; /* spacing between elements */
 }
 
-/* Responsive adjustments */
+/* Paragraph styling */
+#story .section__text {
+  margin-bottom: 20px;
+  line-height: 1.6;
+  font-size: 1.05rem;
+}
+
+/* Section titles inside story */
+#story .section__title {
+  font-size: 2.2rem;
+  margin: 20px 0 10px;
+  font-family: "Playfair Display", serif;
+  color: var(--clr-secondary);
+}
+
+/* Images inside story */
+#story img {
+  margin: 30px 0;
+  border-radius: 12px;
+  max-width: 90%;
+  height: auto;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* =========================
+   Responsive adjustments
+========================= */
 @media (max-width: 768px) {
   #story {
     padding: 40px 15px;
-    height: 75vh; /* mas maliit sa tablet */
+    min-height: 80vh; /* adjust for tablet */
   }
   #story .section__title {
     font-size: 2rem;
   }
-  #story .section__text  {
+  #story .section__text {
     font-size: 1rem;
   }
 }
@@ -594,7 +707,7 @@ button {
 @media (max-width: 480px) {
   #story {
     padding: 30px 10px;
-    height: 70vh; /* base sa mobile */
+    min-height: 70vh; /* adjust for mobile */
   }
   #story .section__title {
     font-size: 1.6rem;
@@ -603,3 +716,4 @@ button {
     font-size: 0.95rem;
   }
 }
+

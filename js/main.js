@@ -101,39 +101,67 @@ END:VCALENDAR`;
   }
 
   /* =========================
-     RSVP FORM + CONFETTI
-  ========================= */
-  function launchRSVPConfetti(){
-    for(let i=0;i<35;i++){
-      const piece = document.createElement("span");
-      const size = rand(6,10);
-      piece.style.cssText = `position:fixed; left:${rand(0,100)}vw; top:-10px; width:${size}px; height:${size}px; border-radius:50%; background:${pick(CONFETTI_COLORS)}; z-index:9999; pointer-events:none;`;
-      piece.animate([{ transform:"translateY(0) rotate(0)", opacity:1 }, { transform:`translateY(300px) rotate(${rand(180,720)}deg)`, opacity:0 }], { duration:2200, easing:"ease-out", fill:"forwards" });
-      document.body.appendChild(piece);
-      setTimeout(()=>piece.remove(),2300);
-    }
+   RSVP FORM + CONFETTI
+========================= */
+function launchRSVPConfetti(){
+  for(let i=0;i<35;i++){
+    const piece = document.createElement("span");
+    const size = Math.random() * 4 + 6; // 6-10px
+    piece.style.cssText = `position:fixed; left:${Math.random()*100}vw; top:-10px; width:${size}px; height:${size}px; border-radius:50%; background:${["#ff6b6b","#feca57","#48dbfb","#1dd1a1","#5f27cd"][Math.floor(Math.random()*5)]}; z-index:9999; pointer-events:none;`;
+    piece.animate([{ transform:"translateY(0) rotate(0)", opacity:1 }, { transform:`translateY(300px) rotate(${Math.random()*540+180}deg)`, opacity:0 }], { duration:2200, easing:"ease-out", fill:"forwards" });
+    document.body.appendChild(piece);
+    setTimeout(()=>piece.remove(),2300);
   }
+}
 
-  const rsvpForm = $(".rsvp-form");
-  if(rsvpForm) rsvpForm.addEventListener("submit", async e=>{
+const rsvpForm = document.querySelector(".rsvp-form");
+const rsvpStatus = document.getElementById("rsvpMessageStatus");
+
+if (rsvpForm && rsvpStatus) {
+  rsvpForm.addEventListener("submit", async e => {
     e.preventDefault();
+
+    // Show loading message
+    rsvpStatus.textContent = "Sending...";
+    rsvpStatus.style.opacity = 1;
+    rsvpStatus.style.color = "#1d274b"; // neutral color
+
     const payload = new URLSearchParams({
       name: rsvpForm.name.value,
       attendance: rsvpForm.attendance.value,
       message: rsvpForm.message.value
     });
-    try{
-      const res = await fetch("https://script.google.com/macros/s/AKfycbyMtejkOuP4GFjI2ubPV3DEmubOiLoxrASm7nWUBS6fZv5FRqd2RbMm217IZwoGPV-7/exec",{ method:"POST", body:payload });
+
+    try {
+      const res = await fetch(
+        "https://script.google.com/macros/s/AKfycbyMtejkOuP4GFjI2ubPV3DEmubOiLoxrASm7nWUBS6fZv5FRqd2RbMm217IZwoGPV-7/exec",
+        { method: "POST", body: payload }
+      );
+
       const result = await res.json();
-      if(result.status==="success"){
+
+      if (result.status === "success") {
         rsvpForm.reset();
         launchRSVPConfetti();
-        alert("RSVP submitted! 💜");
-      } else alert("Submission failed. Please try again.");
-    } catch(err){
-      alert("Network error. Please try again later.");
+
+        // Success message
+        rsvpStatus.textContent = "RSVP submitted! 💜";
+        rsvpStatus.style.color = "#d95fbc";
+
+        // Hide after 5s
+        setTimeout(() => { rsvpStatus.style.opacity = 0; }, 5000);
+      } else {
+        // Failed submission
+        rsvpStatus.textContent = "Submission failed. Please try again.";
+        rsvpStatus.style.color = "#ff6b6b";
+      }
+    } catch (err) {
+      // Network or CORS error
+      rsvpStatus.textContent = "Network error. Please try again later.";
+      rsvpStatus.style.color = "#ff6b6b";
     }
   });
+}
 
   /* =========================
      PRENUP GALLERY SLIDESHOW
@@ -231,11 +259,16 @@ const mapFrame = document.getElementById("mapFrame");
 const closeMap = document.getElementById("closeMap");
 const mapButtons = document.querySelectorAll(".map-hotspot");
 
-// Use the real embed URLs
+// Updated embed URLs with satellite view
+// Updated map URLs (use the actual Google Maps embed links you generated)
+// Updated map URLs (use the actual Google Maps embed links you generated)
 const mapURLs = {
-  ceremony: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3860.0482136328995!2d121.03714291528765!3d14.4770991!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3397cfa9f6d78d7%3A0x4f91183a6be3af0c!2sMary%2C%20Mother%20of%20Good%20Counsel%20Parish%20Church%20-%20Marcelo%20Green%20Village%2C%20Marcelo%20Green%2C%20Paranaque%20City!5e0!3m2!1sen!2sph!4v1700000000000",
-  reception: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3859.191264848197!2d121.03152081528833!3d14.4730043!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3397cf36e13bcfff%3A0xf1e71c8ca60d00c9!2sThe%20Narra%20Tree%20Clubhouse!5e0!3m2!1sen!2sph!4v1700000000000"
+  ceremony: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d10201.083379577898!2d121.02932810783388!3d14.477099163985272!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3397cfa9f6d78d7d%3A0x4f91183a6be3af0c!2sMary%2C%20Mother%20of%20Good%20Counsel%20Parish%20Church%20-%20Marcelo%20Green%20Village%2C%20Marcelo%20Green%2C%20Para%C3%B1aque%20City%20(Diocese%20of%20Para%C3%B1aque)!5e1!3m2!1sen!2sph!4v1770565978649!5m2!1sen!2sph",
+  reception: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d10201.083379577898!2d121.02932810783388!3d14.477099163985272!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3397cf36e13bcfff%3A0xf1e71c8ca60d00c9!2sThe%20Narra%20Tree%20Clubhouse!5e1!3m2!1sen!2sph!4v1770566016665!5m2!1sen!2sph"
 };
+
+
+
 
 // Open modal on button click
 mapButtons.forEach(btn => {
@@ -262,6 +295,9 @@ window.addEventListener("click", e => {
     document.body.style.overflow = "auto";
   }
 });
+
+
+
 
 
 
