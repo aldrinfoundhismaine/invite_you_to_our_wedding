@@ -1,80 +1,27 @@
-/* ==================================================
-   MAIN JS — WEDDING INVITATION (FINAL CLEAN)
-   Features:
-   - Background music + selector
-   - Hero & RSVP confetti
-   - Countdown timer
-   - Scroll effects
-   - RSVP submit (Google Sheets)
-   - Google Drive galleries w/ pagination + download + share
-   - Lightbox (keyboard + arrows + touch swipe)
-   - Settings panel (background + music)
-================================================== */
+
+
 
 document.addEventListener("DOMContentLoaded", () => {
 
-  /* ==================================================
+  /* =========================
      HELPERS
-  ================================================== */
-  const $ = (q) => document.querySelector(q);
-  const $$ = (q) => document.querySelectorAll(q);
+  ========================= */
+  const $ = q => document.querySelector(q);
+  const $$ = q => document.querySelectorAll(q);
   const rand = (min, max) => Math.random() * (max - min) + min;
-  const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
+  const pick = arr => arr[Math.floor(Math.random() * arr.length)];
 
-  /* ==================================================
+  const CONFETTI_COLORS = ["#ff6b6b","#feca57","#48dbfb","#1dd1a1","#5f27cd"];
+
+  /* =========================
      BACKGROUND MUSIC
-  ================================================== */
+  ========================= */
   const bgMusic = $("#bgMusic");
-  const musicToggle = $("#musicToggle");
-  let isPlaying = false;
+  if(bgMusic) bgMusic.volume = 0.3;
 
-  if (bgMusic && musicToggle) {
-    bgMusic.volume = 0.3;
-    bgMusic.play().then(() => { isPlaying = true; musicToggle.textContent = "⏸"; }).catch(() => { musicToggle.textContent = "▶"; });
-    musicToggle.addEventListener("click", () => {
-      if (bgMusic.paused) { bgMusic.play(); musicToggle.textContent = "⏸"; isPlaying = true; }
-      else { bgMusic.pause(); musicToggle.textContent = "▶"; isPlaying = false; }
-    });
-  }
-
-  /* ==================================================
-     CONFETTI COLORS
-  ================================================== */
-  const cssVars = getComputedStyle(document.documentElement);
-  const CONFETTI_COLORS = [
-    cssVars.getPropertyValue("--clr-secondary").trim() || "#9b779d",
-    cssVars.getPropertyValue("--clr-accent").trim() || "#c9907c",
-    cssVars.getPropertyValue("--clr-soft").trim() || "#f3e4e1"
-  ];
-
-  /* ==================================================
-     HERO CONFETTI
-  ================================================== */
-  const confettiContainer = $("#confetti");
-  function spawnConfetti(container) {
-    if (!container) return;
-    const piece = document.createElement("span");
-    const size = rand(4, 10);
-    piece.style.cssText = `
-      position: absolute;
-      left: ${rand(0, 100)}%;
-      top: -10px;
-      width: ${size}px;
-      height: ${size}px;
-      border-radius: 50%;
-      background: ${pick(CONFETTI_COLORS)};
-      opacity: ${rand(0.4, 0.9)};
-      pointer-events: none;
-    `;
-    piece.animate([{ transform: "translateY(0) rotate(0deg)" }, { transform: `translateY(110vh) rotate(${rand(180, 540)}deg)` }], { duration: rand(4000, 6500), easing: "linear", fill: "forwards" });
-    container.appendChild(piece);
-    setTimeout(() => piece.remove(), 7000);
-  }
-  if (confettiContainer) setInterval(() => spawnConfetti(confettiContainer), 250);
-
-  /* ==================================================
+  /* =========================
      COUNTDOWN TIMER
-  ================================================== */
+  ========================= */
   const targetDate = new Date("June 20, 2027 00:00:00").getTime();
   function updateCountdown() {
     const now = new Date().getTime();
@@ -91,35 +38,23 @@ document.addEventListener("DOMContentLoaded", () => {
   setInterval(updateCountdown, 1000);
   updateCountdown();
 
-
- /* ==================================================
-   SAVE THE DATE BUTTON — GOOGLE CALENDAR + ICS
-================================================== */
-const saveDateBtn = document.getElementById("saveDateBtn");
-
-if (saveDateBtn) {
-  saveDateBtn.addEventListener("click", () => {
-    // Event details
+  /* =========================
+     SAVE THE DATE
+  ========================= */
+  const saveDateBtn = $("#saveDateBtn");
+  if(saveDateBtn) saveDateBtn.addEventListener("click", () => {
     const title = "Wedding of A & S";
-    const location = "Our Church Venue";
+    const location = "Mary, Mother of Good Counsel Parish Church";
     const description = "We invite you to celebrate our wedding";
-    
-    // Start / End date in ISO format (UTC)
     const start = new Date("June 20, 2027 08:00:00 UTC");
     const end = new Date("June 20, 2027 12:00:00 UTC");
+    const formatDate = d => d.toISOString().replace(/[-:]|\.\d{3}/g,"");
 
-    // =====================
-    // 1. Google Calendar URL
-    // =====================
-    const formatDate = (d) => d.toISOString().replace(/[-:]|\.\d{3}/g, "");
+    // Google Calendar
     const gCalURL = `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${formatDate(start)}/${formatDate(end)}&details=${encodeURIComponent(description)}&location=${encodeURIComponent(location)}`;
+    window.open(gCalURL,"_blank");
 
-    // Open Google Calendar in new tab (mobile friendly)
-    window.open(gCalURL, "_blank");
-
-    // =====================
-    // 2. ICS file for native calendar apps
-    // =====================
+    // ICS download
     const icsContent = `BEGIN:VCALENDAR
 VERSION:2.0
 BEGIN:VEVENT
@@ -130,191 +65,224 @@ LOCATION:${location}
 DESCRIPTION:${description}
 END:VEVENT
 END:VCALENDAR`;
-
-    // Create a blob & trigger download
     const blob = new Blob([icsContent], { type: "text/calendar" });
-    const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
-    link.href = url;
+    link.href = URL.createObjectURL(blob);
     link.download = "SaveTheDate.ics";
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-    URL.revokeObjectURL(url);
+    URL.revokeObjectURL(link.href);
   });
-}
 
-
-  /* ==================================================
+  /* =========================
      AOS INIT
-  ================================================== */
-  if (window.AOS) AOS.init({ duration: 1000, once: true, easing: "ease-out-cubic" });
+  ========================= */
+  if(window.AOS) AOS.init({ duration:1000, once:true, easing:"ease-out-cubic" });
 
-  /* ==================================================
-     NAV SHADOW + SCROLL TOP BUTTON
-  ================================================== */
-  const nav = $(".nav");
-  const scrollTopBtn = $("#scrollTopBtn");
-  window.addEventListener("scroll", () => {
-    if (nav) nav.style.boxShadow = window.scrollY > 30 ? "0 6px 20px rgba(0,0,0,0.25)" : "none";
-    if (scrollTopBtn) scrollTopBtn.classList.toggle("show", window.scrollY > 200);
-  });
-  scrollTopBtn?.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
+  /* =========================
+     MOBILE NAV LABELS
+  ========================= */
+  if(window.innerWidth <= 480){
+    $$(".nav-bottom .nav__links a").forEach(link=>{
+      const label = link.querySelector("span");
+      if(!label) return;
+      Object.assign(label.style,{
+        transition:"none",
+        opacity:"1",
+        transform:"translateY(0)",
+        position:"static",
+        bottom:"auto",
+        background:"none",
+        padding:"0",
+        whiteSpace:"normal"
+      });
+    });
+  }
 
-  /* ==================================================
-     RSVP CONFETTI + FORM
-  ================================================== */
-  function launchRSVPConfetti() { for (let i=0;i<35;i++){ const piece=document.createElement("span"); const size=rand(6,10); piece.style.cssText=`position: fixed; left: ${rand(0,100)}vw; top: -10px; width: ${size}px; height: ${size}px; border-radius: 50%; background: ${pick(CONFETTI_COLORS)}; z-index: 9999; pointer-events: none;`; piece.animate([{ transform: "translateY(0) rotate(0)", opacity: 1 },{ transform: `translateY(300px) rotate(${rand(180,720)}deg)`, opacity: 0 }],{ duration: 2200, easing: "ease-out", fill: "forwards" }); document.body.appendChild(piece); setTimeout(()=>piece.remove(),2300); } }
+  /* =========================
+     RSVP FORM + CONFETTI
+  ========================= */
+  function launchRSVPConfetti(){
+    for(let i=0;i<35;i++){
+      const piece = document.createElement("span");
+      const size = rand(6,10);
+      piece.style.cssText = `position:fixed; left:${rand(0,100)}vw; top:-10px; width:${size}px; height:${size}px; border-radius:50%; background:${pick(CONFETTI_COLORS)}; z-index:9999; pointer-events:none;`;
+      piece.animate([{ transform:"translateY(0) rotate(0)", opacity:1 }, { transform:`translateY(300px) rotate(${rand(180,720)}deg)`, opacity:0 }], { duration:2200, easing:"ease-out", fill:"forwards" });
+      document.body.appendChild(piece);
+      setTimeout(()=>piece.remove(),2300);
+    }
+  }
 
   const rsvpForm = $(".rsvp-form");
-  if (rsvpForm) rsvpForm.addEventListener("submit", async e => {
+  if(rsvpForm) rsvpForm.addEventListener("submit", async e=>{
     e.preventDefault();
-    const payload = new URLSearchParams({ name: rsvpForm.name.value, attendance: rsvpForm.attendance.value, message: rsvpForm.message.value });
-    try { 
-      const res = await fetch("https://script.google.com/macros/s/AKfycbyMtejkOuP4GFjI2ubPV3DEmubOiLoxrASm7nWUBS6fZv5FRqd2RbMm217IZwoGPV-7/exec",{ method:"POST", body: payload });
+    const payload = new URLSearchParams({
+      name: rsvpForm.name.value,
+      attendance: rsvpForm.attendance.value,
+      message: rsvpForm.message.value
+    });
+    try{
+      const res = await fetch("https://script.google.com/macros/s/AKfycbyMtejkOuP4GFjI2ubPV3DEmubOiLoxrASm7nWUBS6fZv5FRqd2RbMm217IZwoGPV-7/exec",{ method:"POST", body:payload });
       const result = await res.json();
-      if(result.status==="success"){ rsvpForm.reset(); launchRSVPConfetti(); alert("RSVP submitted! 💜"); } 
-      else alert("Submission failed. Please try again.");
-    } catch(err){ alert("Network error. Please try again later."); }
+      if(result.status==="success"){
+        rsvpForm.reset();
+        launchRSVPConfetti();
+        alert("RSVP submitted! 💜");
+      } else alert("Submission failed. Please try again.");
+    } catch(err){
+      alert("Network error. Please try again later.");
+    }
   });
 
-  /* ==================================================
-     SETTINGS PANEL + BACKGROUNDS
-  ================================================== */
-  const settingsToggle = $("#settingsToggle");
-  const settingsPanel = $("#settingsPanel");
-  const bgButtons = $$(".bg-options button");
+  /* =========================
+     PRENUP GALLERY SLIDESHOW
+  ========================= */
+  const prenupGallery = $("#prenup-gallery");
+  const PHOTOS_FOLDER = "assets/prenup/";
+  const PHOTOS = ["1.jpg","2.jpg","3.jpg","4.jpg","5.jpg","6.jpg","7.jpg","8.jpg"]; // Add your prenup images here
+  let currentSlide = 0;
 
-  settingsToggle?.addEventListener("click", () => { settingsPanel.style.display = settingsPanel.style.display === "block" ? "none" : "block"; });
-
-  function applyBackground(file, opacity = 0.3) {
-    const url = `url("./assets/background/${file}")`;
-    document.body.style.backgroundImage = `linear-gradient(rgba(255,255,255,${opacity}), rgba(255,255,255,${opacity})),${url}`;
-    const sections = document.querySelectorAll(".section[data-bg]");
-    sections.forEach(sec => { if(sec.dataset.bg===file){ sec.style.backgroundImage = `linear-gradient(rgba(255,255,255,${opacity}), rgba(255,255,255,${opacity})), url("./assets/background/${file}")`; sec.style.backgroundSize="cover"; sec.style.backgroundPosition="center"; }});
-    localStorage.setItem("bg", file);
+  function renderPrenup(){
+    if(!prenupGallery) return;
+    prenupGallery.innerHTML = PHOTOS.map((src,i)=>`<img src="${PHOTOS_FOLDER}${src}" class="${i===0?'active':''}" loading="lazy" alt="Prenup Photo">`).join("");
+    // Dots
+    const dotsContainer = document.createElement("div");
+    dotsContainer.id="prenup-dots";
+    PHOTOS.forEach((_,i)=>{
+      const dot = document.createElement("span");
+      if(i===0) dot.classList.add("active");
+      dot.addEventListener("click",()=>{ goToSlide(i); resetAutoplay(); });
+      dotsContainer.appendChild(dot);
+    });
+    prenupGallery.after(dotsContainer);
   }
 
-  bgButtons.forEach(btn=>btn.addEventListener("click",()=>applyBackground(btn.dataset.bg,0.2)));
-  const savedBg=localStorage.getItem("bg"); if(savedBg) applyBackground(savedBg,0.2);
-
-  /* ==================================================
-     GOOGLE DRIVE GALLERY
-  ================================================== */
-  const folders = { church: "16BPBMPTwZwZgTI2tnNV1Tk1EKKB4wMyv", prenup: "1ZoSsPSECRq062Bx4KAhKQUtnj24ePRAn", reception: "1FqqNku0QNhGgWMJAiec6944SVjXeAZ4i" };
-  const apiKey = "AIzaSyBgEstYNO3_dKI4mC1KdsPRpx_p2gpDsXQ";
-  const sectionMap = { church: "church-gallery", prenup: "prenup-gallery", reception: "reception-gallery" };
-  const PHOTOS_PER_PAGE = 16;
-  const PLACEHOLDER = "https://via.placeholder.com/400x400/c0c0c0/ffffff?text=Upload+Here";
-
-  async function fetchImages(folderId){
-    try{ const res=await fetch(`https://www.googleapis.com/drive/v3/files?q='${folderId}'+in+parents+and+mimeType contains 'image/'&fields=files(id,name,thumbnailLink)&key=${apiKey}`);
-      const data=await res.json(); return data.files||[]; } 
-    catch(err){ console.error(err); return []; }
+  function goToSlide(index){
+    const imgs = prenupGallery.querySelectorAll("img");
+    const dots = $("#prenup-dots").querySelectorAll("span");
+    imgs.forEach((img,i)=> img.classList.toggle("active", i===index));
+    dots.forEach((dot,i)=> dot.classList.toggle("active", i===index));
+    currentSlide = index;
   }
 
-  function paginate(files){
-    const pages=[]; for(let i=0;i<files.length;i+=PHOTOS_PER_PAGE){ const slice=files.slice(i,i+PHOTOS_PER_PAGE); while(slice.length<PHOTOS_PER_PAGE) slice.push({name:"Placeholder", thumbnailLink:PLACEHOLDER}); pages.push(slice); } return pages;
-  }
+  function nextSlide(){ goToSlide((currentSlide+1)%PHOTOS.length); }
+  let autoplay = setInterval(nextSlide, 6000);
+  function resetAutoplay(){ clearInterval(autoplay); autoplay = setInterval(nextSlide,4000); }
 
-  async function loadGallery(key){
-    const wrapper=$(`#${sectionMap[key]}`); if(!wrapper) return;
-    const pagination=$(`#${key}-pagination`);
-    const prevBtn=pagination?.querySelector(".prev"); const nextBtn=pagination?.querySelector(".next");
-    const files=await fetchImages(folders[key]); const pages=paginate(files); let currentPage=0;
-    function renderPage(){ wrapper.innerHTML=""; pages[currentPage].forEach(file=>{ const fig=document.createElement("figure"); fig.dataset.id=file.id||""; fig.dataset.name=file.name||"Photo"; fig.innerHTML=`<img src="${file.thumbnailLink||PLACEHOLDER}" loading="lazy" alt="Wedding Photo">`; wrapper.appendChild(fig); }); }
-    renderPage();
-    prevBtn?.addEventListener("click",()=>{ currentPage=(currentPage-1+pages.length)%pages.length; renderPage(); });
-    nextBtn?.addEventListener("click",()=>{ currentPage=(currentPage+1)%pages.length; renderPage(); });
-  }
+  renderPrenup();
 
-  /* ==================================================
-     DRIVE LIGHTBOX + SLIDES + SWIPE
-  ================================================== */
+  /* =========================
+     GALLERY LIGHTBOX
+  ========================= */
   let currentGallery=[], currentIndex=0;
-  const popup=$("#drivePopup"), frame=$("#driveFrame"), caption=$("#driveCaption");
+  const popup = $("#drivePopup"), frame = $("#driveFrame"), caption = $("#driveCaption");
 
-  const shareBtn=document.createElement("button"); shareBtn.className="drive-share"; shareBtn.textContent="⇪"; popup.appendChild(shareBtn);
-  const sharePopup=document.createElement("div"); sharePopup.className="share-popup";
-  sharePopup.innerHTML=`<a href="#" target="_blank" class="share-facebook">Facebook</a><a href="#" target="_blank" class="share-twitter">Twitter</a><a href="#" target="_blank" class="share-instagram">Instagram</a><a href="#" target="_blank" class="share-tiktok">TikTok</a>`;
-  popup.appendChild(sharePopup);
-
-  shareBtn.addEventListener("click", e=>{ e.stopPropagation(); sharePopup.style.display=sharePopup.style.display==="flex"?"none":"flex"; });
-  popup.addEventListener("click", e=>{ if(!e.target.closest(".drive-share")&&!e.target.closest(".share-popup")) sharePopup.style.display="none"; });
-
-  function updateShareLinks(fileId,fileName){
-    const url=`https://drive.google.com/uc?id=${fileId}&export=view`;
-    sharePopup.querySelector(".share-facebook").href=`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
-    sharePopup.querySelector(".share-twitter").href=`https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(fileName)}`;
-    sharePopup.querySelector(".share-instagram").href=`https://www.instagram.com/?url=${encodeURIComponent(url)}`;
-    sharePopup.querySelector(".share-tiktok").href=`https://www.tiktok.com/upload?url=${encodeURIComponent(url)}`;
-  }
-
-  function openDrivePreview(fileId,title,galleryArray){
-    currentGallery=galleryArray; currentIndex=galleryArray.findIndex(f=>f.id===fileId);
-    frame.src=`https://drive.google.com/file/d/${fileId}/preview`; caption.textContent=title;
-    updateShareLinks(fileId,title);
-    popup.style.display="flex"; popup.style.opacity=0; popup.style.transform="translateY(20%)";
+  function openPreview(fileId, title, galleryArray){
+    currentGallery = galleryArray;
+    currentIndex = galleryArray.findIndex(f=>f.id===fileId);
+    frame.src = `https://drive.google.com/file/d/${fileId}/preview`;
+    caption.textContent = title;
+    popup.style.display = "flex";
+    popup.style.opacity = 0;
+    popup.style.transform = "translateY(20%)";
     requestAnimationFrame(()=>{ popup.style.opacity=1; popup.style.transform="translateY(0)"; });
   }
 
-  function closeDrivePreview(){ popup.style.transition="opacity 0.3s ease, transform 0.3s ease"; popup.style.opacity=0; popup.style.transform="translateY(20%)"; setTimeout(()=>{ frame.src=""; popup.style.display="none"; },300); }
+  function closePreview(){
+    popup.style.transition="opacity 0.3s ease, transform 0.3s ease";
+    popup.style.opacity=0;
+    popup.style.transform="translateY(20%)";
+    setTimeout(()=>{ frame.src=""; popup.style.display="none"; },300);
+  }
 
-  function slideToImage(newIndex,direction){
-    if(!currentGallery.length) return; const next=currentGallery[newIndex]; if(!next?.id) return;
-    const width=popup.offsetWidth, startX=direction*width, endX=0;
-    frame.style.transition="none"; frame.style.transform=`translateX(${startX}px) scale(0.95)`;
-    frame.src=`https://drive.google.com/file/d/${next.id}/preview`; caption.textContent=next.name;
-    updateShareLinks(next.id,next.name);
-    requestAnimationFrame(()=>{ frame.style.transition="transform 0.35s ease"; frame.style.transform=`translateX(${endX}px) scale(1)`; });
+  function slideTo(newIndex,direction){
+    if(!currentGallery.length) return;
+    const next=currentGallery[newIndex];
+    if(!next?.id) return;
+    const width=popup.offsetWidth;
+    frame.style.transition="none";
+    frame.style.transform=`translateX(${direction*width}px) scale(0.95)`;
+    frame.src=`https://drive.google.com/file/d/${next.id}/preview`;
+    caption.textContent=next.name;
+    requestAnimationFrame(()=>{ frame.style.transition="transform 0.35s ease"; frame.style.transform="translateX(0px) scale(1)"; });
     currentIndex=newIndex;
   }
 
-  function showNext(){ slideToImage((currentIndex+1)%currentGallery.length,1); }
-  function showPrev(){ slideToImage((currentIndex-1+currentGallery.length)%currentGallery.length,-1); }
+  const showNext=()=>slideTo((currentIndex+1)%currentGallery.length,1);
+  const showPrev=()=>slideTo((currentIndex-1+currentGallery.length)%currentGallery.length,-1);
 
-  $(".drive-download")?.addEventListener("click", async ()=>{
-    if(!currentGallery.length) return; const current=currentGallery[currentIndex]; if(!current?.id) return;
-    const url=`https://www.googleapis.com/drive/v3/files/${current.id}?alt=media&key=${apiKey}`;
-    try{ const res=await fetch(url); if(!res.ok) throw new Error("Network error"); const blob=await res.blob(); const link=document.createElement("a"); link.href=URL.createObjectURL(blob); link.download=current.name||"photo.jpg"; document.body.appendChild(link); link.click(); document.body.removeChild(link); } 
-    catch(err){ alert("Failed to download. Please try again."); console.error(err);}
-  });
-
-  $(".drive-close")?.addEventListener("click", closeDrivePreview);
-  popup?.addEventListener("click", e=>{ if(e.target.id==="drivePopup") closeDrivePreview(); });
-
-  document.addEventListener("keydown", e=>{
+  $(".drive-close")?.addEventListener("click",closePreview);
+  popup?.addEventListener("click",e=>{ if(e.target.id==="drivePopup") closePreview(); });
+  document.addEventListener("keydown",e=>{
     if(popup.style.display!=="flex") return;
-    if(e.key==="Escape") closeDrivePreview();
+    if(e.key==="Escape") closePreview();
     if(e.key==="ArrowRight") showNext();
     if(e.key==="ArrowLeft") showPrev();
   });
+/* =========================
+   DETAILS MAP POPUP (2 hotspots)
+========================= */
+/* =========================
+   DETAILS MAP POPUP
+========================= */
+const mapModal = document.getElementById("mapModal");
+const mapFrame = document.getElementById("mapFrame");
+const closeMap = document.getElementById("closeMap");
+const mapButtons = document.querySelectorAll(".map-hotspot");
 
-  document.addEventListener("click", e=>{
-    const fig=e.target.closest(".gallery-wrapper figure"); if(!fig) return;
-    const galleryWrapper=fig.closest(".gallery-wrapper");
-    const figures=Array.from(galleryWrapper.querySelectorAll("figure"));
-    const galleryArray=figures.map(f=>({id:f.dataset.id,name:f.dataset.name}));
-    openDrivePreview(fig.dataset.id,fig.dataset.name,galleryArray);
+// Use the real embed URLs
+const mapURLs = {
+  ceremony: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3860.0482136328995!2d121.03714291528765!3d14.4770991!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3397cfa9f6d78d7%3A0x4f91183a6be3af0c!2sMary%2C%20Mother%20of%20Good%20Counsel%20Parish%20Church%20-%20Marcelo%20Green%20Village%2C%20Marcelo%20Green%2C%20Paranaque%20City!5e0!3m2!1sen!2sph!4v1700000000000",
+  reception: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3859.191264848197!2d121.03152081528833!3d14.4730043!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3397cf36e13bcfff%3A0xf1e71c8ca60d00c9!2sThe%20Narra%20Tree%20Clubhouse!5e0!3m2!1sen!2sph!4v1700000000000"
+};
+
+// Open modal on button click
+mapButtons.forEach(btn => {
+  btn.addEventListener("click", () => {
+    const key = btn.dataset.map; // "ceremony" or "reception"
+    mapFrame.src = mapURLs[key] || "";
+    mapModal.style.display = "flex";
+    document.body.style.overflow = "hidden"; // prevent background scroll
   });
+});
 
-  /* ==================================================
-     TOUCH SWIPE
-  ================================================== */
-  let touchStartX=0,touchStartY=0,touchEndX=0,touchEndY=0, swipeThreshold=50;
+// Close modal when clicking close button
+closeMap.addEventListener("click", () => {
+  mapModal.style.display = "none";
+  mapFrame.src = ""; // clear iframe
+  document.body.style.overflow = "auto";
+});
 
-  popup?.addEventListener("touchstart", e=>{ touchStartX=e.changedTouches[0].screenX; touchStartY=e.changedTouches[0].screenY; });
-  popup?.addEventListener("touchend", e=>{ touchEndX=e.changedTouches[0].screenX; touchEndY=e.changedTouches[0].screenY; handleSwipeGesture(); });
-
-  function handleSwipeGesture(){
-    const diffX = touchEndX - touchStartX, diffY = touchEndY - touchStartY;
-    if(Math.abs(diffX)>Math.abs(diffY)&&Math.abs(diffX)>swipeThreshold){ diffX<0?showNext():showPrev(); }
-    else if(Math.abs(diffY)>Math.abs(diffX)&&Math.abs(diffY)>swipeThreshold){ const dir=diffY<0?-1:1; popup.style.transition="opacity 0.3s ease, transform 0.3s ease"; popup.style.transform=`translateY(${dir*100}%)`; popup.style.opacity=0; setTimeout(()=>closeDrivePreview(),300); }
+// Close modal when clicking outside content
+window.addEventListener("click", e => {
+  if (e.target === mapModal) {
+    mapModal.style.display = "none";
+    mapFrame.src = "";
+    document.body.style.overflow = "auto";
   }
+});
 
-  /* ==================================================
-     INIT GALLERIES
-  ================================================== */
-  Object.keys(folders).forEach(loadGallery);
+
+
+
+  /* =========================
+     TOUCH SWIPE
+  ========================= */
+  let touchStartX=0,touchStartY=0,touchEndX=0,touchEndY=0, swipeThreshold=50;
+  popup?.addEventListener("touchstart",e=>{ touchStartX=e.changedTouches[0].screenX; touchStartY=e.changedTouches[0].screenY; });
+  popup?.addEventListener("touchend",e=>{
+    touchEndX=e.changedTouches[0].screenX;
+    touchEndY=e.changedTouches[0].screenY;
+    const diffX=touchEndX-touchStartX, diffY=touchEndY-touchStartY;
+    if(Math.abs(diffX)>Math.abs(diffY) && Math.abs(diffX)>swipeThreshold) diffX<0?showNext():showPrev();
+    else if(Math.abs(diffY)>Math.abs(diffX) && Math.abs(diffY)>swipeThreshold){
+      const dir=diffY<0?-1:1;
+      popup.style.transition="opacity 0.3s ease, transform 0.3s ease";
+      popup.style.transform=`translateY(${dir*100}%)`;
+      popup.style.opacity=0;
+      setTimeout(closePreview,300);
+    }
+  });
 
 });
